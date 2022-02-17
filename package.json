@@ -1,0 +1,35 @@
+{
+  "name": "formgenerator",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env TAILWIND_MODE=watch next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.4.3",
+    "classnames": "^2.3.1",
+    "formik": "^2.2.9",
+    "immer": "^9.0.12",
+    "next": "12.0.10",
+    "react": "17.0.2",
+    "react-dnd": "^15.1.1",
+    "react-dnd-html5-backend": "^15.1.2",
+    "react-dom": "17.0.2",
+    "react-select": "^5.2.2",
+    "schema-to-yup": "^1.11.5",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.18",
+    "@types/react": "17.0.39",
+    "autoprefixer": "^10.4.2",
+    "cross-env": "^7.0.3",
+    "eslint": "8.9.0",
+    "eslint-config-next": "12.0.10",
+    "postcss": "^8.4.6",
+    "tailwindcss": "^3.0.22",
+    "typescript": "4.5.5"
+  }
+}
