@@ -1,21 +1,25 @@
 import { FC, ReactNode, useMemo } from "react";
 import { useDrag } from "react-dnd";
 import {
-  FieldConfig,
-  FieldType,
-  FIELD_TYPES,
-  FormConfig,
-  LayoutConfig,
-} from "src/types";
+  useFormTemplateAction,
+  useFormTemplateState,
+} from "@containers/editor/context/FormTemplateContext";
+import { FieldType, FIELD_TYPES, FormConfig } from "src/types";
 import { blankFields } from "./helpers/blankFields";
 import { blankLayout } from "./helpers/blankLayout";
 import { DraggableEditorType } from "./types";
+import TextFieldConfigurationForm from "./forms/TextField/TextFieldConfigurationForm";
+import { useFormConfigContext } from "./context";
 
 type OwnProps = {};
 
 type Props = OwnProps;
 
 const FormTemplateBuilderSitePanel: FC<Props> = () => {
+  const { setView, setFieldConfigureInfo } = useFormTemplateAction();
+  const { view, fieldConfigureInfo } = useFormTemplateState();
+
+  // setView({view: 'FIELD_CONFIG',field: 'input',index: 1})
   const fieldBoxes = useMemo(
     () => FIELD_TYPES.map((type) => <FieldBox fieldType={type} key={type} />),
     [FIELD_TYPES]
@@ -23,17 +27,57 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
 
   return (
     <div className="px-2">
-      <div className="text-center font-bold">Components</div>
       <div className="mt-4">
-        <div className="grid gap-4 mb-4">
-          <LayoutBox />
-        </div>
-        <div className="grid grid-cols-2 gap-4">{fieldBoxes}</div>
+        {view === "fieldConfig" ? (
+          <>
+            <button
+              onClick={() => {
+                setView("list");
+                setFieldConfigureInfo(undefined);
+              }}
+              className="mb-4"
+            >
+              Go back to list
+            </button>
+            <FieldConfigView />
+          </>
+        ) : (
+          <>
+            <div className="text-center font-bold">Components</div>
+            <div className="grid gap-4 mb-4">
+              <LayoutBox />
+            </div>
+            <div className="grid grid-cols-2 gap-4">{fieldBoxes}</div>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
+const FieldConfigView = () => {
+  const { fieldConfigureInfo } = useFormTemplateState();
+  const { getFieldConfigByIndexes } = useFormConfigContext();
+
+  if (!fieldConfigureInfo) {
+    return <div>Error not fieldConfigureInfo found</div>;
+  }
+  const config = getFieldConfigByIndexes(
+    fieldConfigureInfo.index,
+    fieldConfigureInfo.subIndex
+  );
+
+  if (config.field === "text") {
+    return (
+      <TextFieldConfigurationForm
+        fieldConfigureInfo={fieldConfigureInfo}
+        fieldConfig={config}
+        type={Date.now()}
+      />
+    );
+  }
+  return <></>;
+};
 // TODO: Make generic wrapper for box and then make seperate for item / layout
 const FieldBox = ({ fieldType }: { fieldType: FieldType }) => {
   const blankField = blankFields[fieldType];

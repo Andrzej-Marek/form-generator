@@ -9,7 +9,17 @@ type Props = OwnProps & FieldProps & InputProps;
 
 const TextField: FC<Props> = ({ name, ...rest }) => {
   const [field, meta] = useField<string>({ name, type: "text" });
-  return <InputRaw {...rest} {...field} error={meta.error} />;
+  return (
+    <InputRaw
+      {...rest}
+      {...field}
+      onChange={(event) => {
+        field.onChange?.(event);
+        rest.onChange?.(event);
+      }}
+      error={meta.error}
+    />
+  );
 };
 
 export default TextField;

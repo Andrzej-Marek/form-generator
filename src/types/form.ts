@@ -82,3 +82,14 @@ export type FieldConfig = {
 
 //// We can make nested object, we have to add name for layout field
 export type FormConfig = Array<FieldConfig | LayoutConfig>;
+
+export type FormConfigs = FieldConfig | LayoutConfig | EmptyConfig;
+
+export const isFieldConfig = (config: FormConfigs): config is FieldConfig =>
+  (config as FieldConfig).type === "field";
+
+export const isLayoutConfig = (config: FormConfigs): config is LayoutConfig =>
+  (config as LayoutConfig).type === "layout";
+
+export const isEmptyConfig = (config: FormConfigs): config is EmptyConfig =>
+  (config as EmptyConfig).type === "empty";

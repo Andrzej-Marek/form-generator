@@ -9,7 +9,7 @@ export const buildYupSchema = (config: FormConfig) => {
   config.forEach((el) => {
     if (el.type === "layout") {
       el.config.forEach((field) => {
-        if (!field.schema) {
+        if (field.type === "empty" || !field.schema) {
           return;
         }
         yupObject[field.name] = buildKeyValidation(field.schema);

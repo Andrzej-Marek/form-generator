@@ -1,12 +1,7 @@
-import FormTemplateBuilderLayout from "@layout/FormTemplateBuilderLayout";
-import { FC } from "react";
-import FormTemplateBuilder from "src/containers/editor/FormTemplateBuilder";
+import FormTemplateBuilder from "@containers/editor/FormTemplateBuilder";
+import FormTemplateBuilderLayout from "@containers/editor/layout/FormTemplateBuilderLayout";
 
-type OwnProps = {};
-
-type Props = OwnProps;
-
-const Editor: FC<Props> = () => {
+const Editor = () => {
   return (
     <FormTemplateBuilderLayout>
       <div className="m-5 p-5 rounded-md shadow-200 bg-white">

@@ -1,4 +1,5 @@
-import { FieldConfig } from "src/types";
+import { useFormTemplateAction } from "@containers/editor/context";
+import { FieldConfig, FieldType } from "src/types";
 import {
   TextField,
   PasswordField,
@@ -8,11 +9,21 @@ import {
 } from "..";
 
 export const FieldController = ({
+  index,
+  subIndex,
   fieldConfig,
 }: {
   fieldConfig: FieldConfig;
+  index: number;
+  subIndex?: number;
 }) => {
+  const { setFieldConfigureInfo, setView } = useFormTemplateAction();
   const { field, name, label } = fieldConfig;
+
+  const onConfigClick = (fieldType: FieldType) => {
+    setFieldConfigureInfo({ field: fieldType, index, subIndex });
+    setView("fieldConfig");
+  };
 
   if (field === "text") {
     return (
@@ -21,6 +32,7 @@ export const FieldController = ({
         label={label}
         placeholder={fieldConfig.placeholder}
         required={fieldConfig.required}
+        onConfigClick={() => onConfigClick("text")}
       />
     );
   }

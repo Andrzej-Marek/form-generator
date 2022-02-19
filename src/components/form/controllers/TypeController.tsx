@@ -1,5 +1,5 @@
 import { DropSpace } from "@containers/editor/components";
-import { OnDrop } from "@containers/editor/FormTemplateBuilder";
+import { OnDrop } from "@containers/editor/context/FormConfigContext";
 import { FormBody } from "@layout/form";
 import { useMemo } from "react";
 import { FormConfig, LayoutConfig } from "src/types";
@@ -27,7 +27,7 @@ export const TypeController = ({
   }
 
   if (typeConfig.type === "field") {
-    return <FieldController fieldConfig={typeConfig} />;
+    return <FieldController fieldConfig={typeConfig} index={controllerIndex} />;
   }
 
   return <></>;
@@ -59,7 +59,14 @@ const ColumnsFields = ({
           );
         }
 
-        return <FieldController fieldConfig={el} key={index} />;
+        return (
+          <FieldController
+            fieldConfig={el}
+            key={index}
+            index={controllerIndex}
+            subIndex={index}
+          />
+        );
       }),
     [config]
   );

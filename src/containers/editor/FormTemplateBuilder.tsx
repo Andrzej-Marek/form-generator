@@ -1,17 +1,17 @@
 import { Form } from "@components/form";
 import { TypeController } from "@components/form/controllers";
 import { FormWrapper } from "@layout/form";
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
 import { DropSpace } from "./components";
-import { useDropContext } from "./hooks/useDropContext";
+import { useFormConfigContext } from "./context/FormConfigContext";
 
 type OwnProps = {};
 
 type Props = OwnProps;
 
 const FormTemplateBuilder: FC<Props> = () => {
-  const [config, onDrop] = useDropContext();
+  const { config, onDrop } = useFormConfigContext();
 
   const elements = useMemo(
     () =>
