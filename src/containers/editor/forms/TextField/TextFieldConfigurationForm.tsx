@@ -1,7 +1,7 @@
-import { Form, TextField } from "@components/form";
+import { CheckboxField, Form, TextField } from "@components/form";
 import { useFormConfigContext } from "@containers/editor/context";
 import { FieldConfigureInfo } from "@containers/editor/context/FormTemplateContext";
-import { FormWrapper } from "@layout/form";
+import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { TextFieldConfig } from "src/types";
 
@@ -17,8 +17,7 @@ const TextFieldConfigurationForm: FC<Props> = ({
   fieldConfig,
 }) => {
   const { index, subIndex } = fieldConfigureInfo;
-  const { updateField, getFieldConfigByIndexes, resetFieldToInitial } =
-    useFormConfigContext();
+  const { updateField, resetFieldToInitial } = useFormConfigContext();
 
   const onUpdateField = (field: keyof TextFieldConfig, value: string) => {
     updateField<TextFieldConfig>(field, value, index, subIndex);
@@ -44,7 +43,7 @@ const TextFieldConfigurationForm: FC<Props> = ({
       enableReinitialize
       // validationSchema={validationSchema}
     >
-      {({ errors, values, resetForm, initialValues }) => (
+      {({ resetForm }) => (
         <FormWrapper>
           <TextField
             name="label"
@@ -62,6 +61,22 @@ const TextFieldConfigurationForm: FC<Props> = ({
               onUpdateField("placeholder", event.target.value)
             }
           />
+          <FormBody columns={2}>
+            <TextField
+              name="name"
+              label="Name"
+              size="small"
+              placeholder="Field name"
+              onChange={(event) => onUpdateField("name", event.target.value)}
+            />
+            <TextField
+              name="value"
+              label="Initial value"
+              size="small"
+              placeholder="Initial value"
+              onChange={(event) => onUpdateField("value", event.target.value)}
+            />
+          </FormBody>
           <button type="submit">SUBMIT</button>
           <button
             type="reset"

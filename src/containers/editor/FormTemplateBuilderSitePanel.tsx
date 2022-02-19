@@ -72,7 +72,6 @@ const FieldConfigView = () => {
       <TextFieldConfigurationForm
         fieldConfigureInfo={fieldConfigureInfo}
         fieldConfig={config}
-        type={Date.now()}
       />
     );
   }

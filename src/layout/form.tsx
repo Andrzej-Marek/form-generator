@@ -50,7 +50,11 @@ export const FormBody: FC<CommonProps & { columns: number }> = ({
 }) => {
   return (
     <div
-      className={classNames("grid gap-4", `lg:grid-cols-${columns}`, className)}
+      className={classNames(
+        "grid gap-4",
+        `lg:grid-cols-${columns} items-end`,
+        className
+      )}
     >
       {children}
     </div>

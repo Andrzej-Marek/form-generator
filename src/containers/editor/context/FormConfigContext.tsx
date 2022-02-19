@@ -4,7 +4,6 @@ import { createContext, FC, useContext, useState } from "react";
 import {
   EmptyConfig,
   FieldConfig,
-  FieldType,
   FormConfig,
   FormConfigs,
   isFieldConfig,
@@ -22,11 +21,6 @@ type Context = {
   config: FormConfig;
   initialConfig: FormConfig;
   onDrop: OnDrop;
-  setConfigField: (
-    FieldType: FieldType,
-    index: number,
-    subIndex?: number
-  ) => void;
   updateField: <T>(
     fieldOption: keyof T,
     value: string,
@@ -146,6 +140,7 @@ export const FormConfigProvider: FC = ({ children }) => {
     index,
     subIndex
   ) => {
+    // TODO: Try to make better types, if any problem with update field options
     setConfig((prevState) =>
       produce(prevState, ({ draft }) => {
         if (typeof subIndex === "number") {
@@ -160,14 +155,6 @@ export const FormConfigProvider: FC = ({ children }) => {
         }
       })
     );
-  };
-
-  const setConfigField: Context["setConfigField"] = (
-    fieldType,
-    index,
-    subIndex?
-  ) => {
-    console.log({ fieldType, index, subIndex });
   };
 
   const resetFieldToInitial: Context["resetFieldToInitial"] = (
@@ -238,7 +225,6 @@ export const FormConfigProvider: FC = ({ children }) => {
         config: config.draft,
         initialConfig: config.initial,
         onDrop,
-        setConfigField,
         updateField,
         getFieldConfigByIndexes,
         resetFieldToInitial,

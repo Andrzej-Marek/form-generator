@@ -64,7 +64,9 @@ export function useFormTemplateState() {
   const context = React.useContext(FormTemplateStateContext);
 
   if (context === undefined) {
-    throw new Error(`useFormTemplateState must be used within a ModalProvider`);
+    throw new Error(
+      `useFormTemplateState must be used within a FormTemplateProvider`
+    );
   }
 
   return context;
@@ -75,7 +77,7 @@ export function useFormTemplateAction() {
 
   if (dispatch === undefined) {
     throw new Error(
-      `useFormTemplateAction must be used within a ModalProvider`
+      `useFormTemplateAction must be used within a FormTemplateProvider`
     );
   }
 

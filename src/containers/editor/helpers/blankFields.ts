@@ -1,16 +1,16 @@
 import { FieldConfig, FieldType } from "src/types";
 
 export const blankFields: Record<FieldType, FieldConfig> = {
-  checkbox: { field: "checkbox", value: "", name: "checkbox", type: "field" },
-  number: { field: "number", value: undefined, name: "number", type: "field" },
-  password: { field: "password", value: "", name: "password", type: "field" },
+  checkbox: { field: "checkbox", value: "", name: "", type: "field" },
+  number: { field: "number", value: undefined, name: "", type: "field" },
+  password: { field: "password", value: "", name: "", type: "field" },
   select: {
     field: "select",
     value: "",
-    name: "select",
+    name: "",
     type: "field",
     options: [],
   },
-  text: { field: "text", value: "", name: "text", type: "field" },
+  text: { field: "text", value: "", name: "", type: "field" },
   textArea: { field: "textArea", value: "textArea", name: "", type: "field" },
 };

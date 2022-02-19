@@ -1,5 +1,6 @@
 import { DropSpace } from "@containers/editor/components";
 import { OnDrop } from "@containers/editor/context/FormConfigContext";
+import { FormTemplateBuilderActions } from "@containers/editor/FormTemplateBuilder";
 import { FormBody } from "@layout/form";
 import { useMemo } from "react";
 import { FormConfig, LayoutConfig } from "src/types";
@@ -9,10 +10,12 @@ export const TypeController = ({
   typeConfig,
   onDrop,
   index: controllerIndex,
+  actions,
 }: {
   typeConfig: FormConfig[number];
   onDrop: OnDrop;
   index: number;
+  actions?: FormTemplateBuilderActions;
 }) => {
   if (typeConfig.type === "layout") {
     return (
@@ -21,13 +24,22 @@ export const TypeController = ({
           config={typeConfig.config}
           onDrop={onDrop}
           controllerIndex={controllerIndex}
+          actions={actions}
         />
       </FormBody>
     );
   }
 
   if (typeConfig.type === "field") {
-    return <FieldController fieldConfig={typeConfig} index={controllerIndex} />;
+    return (
+      <FieldController
+        fieldConfig={typeConfig}
+        actions={{
+          onConfigClick: (fieldType) =>
+            actions?.configField(fieldType, controllerIndex),
+        }}
+      />
+    );
   }
 
   return <></>;
@@ -37,10 +49,12 @@ const ColumnsFields = ({
   config,
   onDrop,
   controllerIndex,
+  actions,
 }: {
   config: LayoutConfig["config"];
   onDrop: OnDrop;
   controllerIndex: number;
+  actions?: FormTemplateBuilderActions;
 }) => {
   const elements = useMemo(
     () =>
@@ -63,8 +77,10 @@ const ColumnsFields = ({
           <FieldController
             fieldConfig={el}
             key={index}
-            index={controllerIndex}
-            subIndex={index}
+            actions={{
+              onConfigClick: (fieldType) =>
+                actions?.configField(fieldType, controllerIndex, index),
+            }}
           />
         );
       }),
@@ -73,55 +89,3 @@ const ColumnsFields = ({
 
   return <>{elements}</>;
 };
-
-// const ColumnsFields = ({
-//   columns,
-//   config,
-//   onDrop,
-//   controllerIndex,
-// }: {
-//   columns: number;
-//   config: FieldConfig[];
-//   onDrop: OnDrop;
-//   controllerIndex: number;
-// }) => {
-//   console.log("config", config);
-//   if (!config.length) {
-//     const elements = [...Array(columns)].map((_el, index) => (
-//       <DropSpace
-//         key={index}
-//         index={index}
-//         onDrop={(fieldConfig, index) =>
-//           onDrop(fieldConfig, controllerIndex, index)
-//         }
-//         label={index + 1}
-//         variant="component"
-//       />
-//     ));
-//     return <>{elements}</>;
-//   }
-
-//   let index = 0;
-//   const elements = [];
-
-//   for (const el of config) {
-//     if (el) {
-//       elements.push(<FieldController fieldConfig={el} key={index} />);
-//     } else {
-//       elements.push(
-//         <DropSpace
-//           key={index}
-//           index={index}
-//           onDrop={(fieldConfig, index) =>
-//             onDrop(fieldConfig, controllerIndex, index)
-//           }
-//           label={index + 1}
-//           variant="component"
-//         />
-//       );
-//     }
-//     index++;
-//   }
-
-//   return <>{elements}</>;
-// };

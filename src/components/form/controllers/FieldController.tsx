@@ -1,4 +1,3 @@
-import { useFormTemplateAction } from "@containers/editor/context";
 import { FieldConfig, FieldType } from "src/types";
 import {
   TextField,
@@ -8,31 +7,27 @@ import {
   CheckboxField,
 } from "..";
 
+export type FieldControllerActions = {
+  onConfigClick: (fieldType: FieldType) => void;
+};
 export const FieldController = ({
-  index,
-  subIndex,
   fieldConfig,
+  actions,
 }: {
   fieldConfig: FieldConfig;
-  index: number;
-  subIndex?: number;
+  actions?: FieldControllerActions;
 }) => {
-  const { setFieldConfigureInfo, setView } = useFormTemplateAction();
-  const { field, name, label } = fieldConfig;
-
-  const onConfigClick = (fieldType: FieldType) => {
-    setFieldConfigureInfo({ field: fieldType, index, subIndex });
-    setView("fieldConfig");
-  };
+  const { field, name, label, value } = fieldConfig;
 
   if (field === "text") {
     return (
       <TextField
         name={name}
         label={label}
+        value={value}
         placeholder={fieldConfig.placeholder}
         required={fieldConfig.required}
-        onConfigClick={() => onConfigClick("text")}
+        onConfigClick={() => actions?.onConfigClick("text")}
       />
     );
   }

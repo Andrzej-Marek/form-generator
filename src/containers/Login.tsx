@@ -108,7 +108,7 @@ const config: FormConfig = [
     field: "text",
     value: "",
     name: "numberField",
-    label: "Number field",
+    label: "Text field",
     placeholder: "Please insert your number value",
     // required: true,
     // schema: {

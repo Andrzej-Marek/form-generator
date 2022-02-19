@@ -5,6 +5,7 @@ import Checkbox, { CheckboxProps } from "../Checkbox";
 import { SelectOption } from "src/types/selectOption";
 import FieldLabel from "../FieldLabel";
 import classNames from "classnames";
+import { getFieldName } from "./helpers";
 
 interface OwnProps {
   options: SelectOption[];
@@ -21,7 +22,10 @@ const CheckboxGroupField: FC<Props> = ({
   label,
   ...rest
 }) => {
-  const [field] = useField<string[]>({ name, type: "checkbox" });
+  const [field] = useField<string[]>({
+    name: getFieldName("checkbox", name),
+    type: "checkbox",
+  });
 
   const checkboxes = options.map((option) => (
     <Checkbox
