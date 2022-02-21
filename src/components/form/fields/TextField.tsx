@@ -3,7 +3,7 @@ import InputRaw, { InputProps } from "../InputRaw";
 import { FieldProps } from "./fields.type";
 import { useField } from "formik";
 import { getFieldName } from "./helpers";
-import FieldWrapper from "../components/FieldWrapper/FieldWrapper";
+import FieldActionsWrapper from "../components/FieldActionsWrapper/FieldActionsWrapper";
 
 interface OwnProps {}
 
@@ -16,7 +16,7 @@ const TextField: FC<Props> = ({ name, className, actions, ...rest }) => {
   });
 
   return (
-    <FieldWrapper actions={actions}>
+    <FieldActionsWrapper actions={actions}>
       <InputRaw
         {...rest}
         {...field}
@@ -26,7 +26,7 @@ const TextField: FC<Props> = ({ name, className, actions, ...rest }) => {
         }}
         error={meta.error}
       />
-    </FieldWrapper>
+    </FieldActionsWrapper>
   );
 };
 

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { useDrag } from "react-dnd";
 import {
   useFormTemplateAction,
@@ -8,8 +8,8 @@ import { FieldType, FIELD_TYPES, FormConfig } from "src/types";
 import { blankFields } from "./helpers/blankFields";
 import { blankLayout } from "./helpers/blankLayout";
 import { DraggableEditorType } from "./types";
-import TextFieldConfigurationForm from "./forms/TextField/TextFieldConfigurationForm";
 import { useFormConfigContext } from "./context";
+import { LayoutConfigurationForm, TextFieldConfigurationForm } from "./forms";
 
 type OwnProps = {};
 
@@ -19,7 +19,6 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
   const { setView, setFieldConfigureInfo } = useFormTemplateAction();
   const { view, fieldConfigureInfo } = useFormTemplateState();
 
-  // setView({view: 'FIELD_CONFIG',field: 'input',index: 1})
   const fieldBoxes = useMemo(
     () => FIELD_TYPES.map((type) => <FieldBox fieldType={type} key={type} />),
     [FIELD_TYPES]
@@ -39,7 +38,11 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
             >
               Go back to list
             </button>
-            <FieldConfigView />
+            {fieldConfigureInfo?.field === "layout" ? (
+              <LayoutConfigView />
+            ) : (
+              <FieldConfigView />
+            )}
           </>
         ) : (
           <>
@@ -55,6 +58,22 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
   );
 };
 
+const LayoutConfigView = () => {
+  const { fieldConfigureInfo } = useFormTemplateState();
+  const { getLayoutConfigByIndex } = useFormConfigContext();
+
+  if (!fieldConfigureInfo) {
+    return <div>Error not fieldConfigureInfo found</div>;
+  }
+  const layoutConfig = getLayoutConfigByIndex(fieldConfigureInfo.index);
+
+  return (
+    <LayoutConfigurationForm
+      fieldConfigureInfo={fieldConfigureInfo}
+      layoutConfig={layoutConfig}
+    />
+  );
+};
 const FieldConfigView = () => {
   const { fieldConfigureInfo } = useFormTemplateState();
   const { getFieldConfigByIndexes } = useFormConfigContext();

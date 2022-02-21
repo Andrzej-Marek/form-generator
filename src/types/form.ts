@@ -12,6 +12,7 @@ export const FIELD_TYPES = [
 ] as const;
 
 export type FieldType = typeof FIELD_TYPES[number];
+export type FormConfigTypes = FormConfigs["type"];
 
 interface GenericFieldTypeConfig<Value> {
   field: FieldType;

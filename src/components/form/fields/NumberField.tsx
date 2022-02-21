@@ -13,7 +13,18 @@ const NumberField: FC<Props> = ({ name, ...rest }) => {
     name: getFieldName("number", name),
     type: "number",
   });
-  return <Input {...rest} {...field} error={meta.error} type="number" />;
+  return (
+    <Input
+      {...rest}
+      {...field}
+      onChange={(event) => {
+        field.onChange?.(event);
+        rest.onChange?.(event);
+      }}
+      error={meta.error}
+      type="number"
+    />
+  );
 };
 
 export default NumberField;

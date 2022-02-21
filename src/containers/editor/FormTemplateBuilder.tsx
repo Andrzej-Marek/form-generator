@@ -6,7 +6,7 @@ import { buildYupSchema } from "src/helpers/createYupSchema";
 import { FieldType } from "src/types";
 import { DropSpace } from "./components";
 import { useFormTemplateAction, useFormTemplateState } from "./context";
-import { useFormConfigContext } from "./context/FormConfigContext";
+import { useFormConfigContext } from "./context/formConfig/FormConfigContext";
 
 type OwnProps = {};
 
@@ -14,11 +14,13 @@ type Props = OwnProps;
 
 export type FormTemplateBuilderActions = {
   configField: (fieldType: FieldType, index: number, subIndex?: number) => void;
+  configLayout: (index: number) => void;
   deleteField: (fieldType: FieldType, index: number, subIndex?: number) => void;
+  deleteLayout: (index: number) => void;
 };
 
 const FormTemplateBuilder: FC<Props> = () => {
-  const { config, onDrop, deleteField } = useFormConfigContext();
+  const { config, onDrop, deleteField, deleteLayout } = useFormConfigContext();
   const { fieldConfigureInfo } = useFormTemplateState();
   const { setFieldConfigureInfo, setView } = useFormTemplateAction();
 
@@ -36,6 +38,16 @@ const FormTemplateBuilder: FC<Props> = () => {
         setView("list");
       }
       deleteField(index, subIndex);
+    },
+    configLayout: (index) => {
+      setFieldConfigureInfo({ field: "layout", index });
+      setView("fieldConfig");
+    },
+
+    deleteLayout: (index) => {
+      setFieldConfigureInfo(undefined);
+      setView("list");
+      deleteLayout(index);
     },
   };
 

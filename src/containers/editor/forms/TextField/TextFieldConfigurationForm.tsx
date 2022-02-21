@@ -34,8 +34,10 @@ const TextFieldConfigurationForm: FC<Props> = ({
     if (initial.field !== "text") {
       throw new Error("Invalid initial");
     }
+
     return initial;
   };
+
   return (
     <Form<TextFieldConfig>
       initialValues={formInitialValues}

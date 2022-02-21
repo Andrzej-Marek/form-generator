@@ -1,12 +1,13 @@
 import React from "react";
+import { FieldType, FormConfigTypes } from "src/types";
 
 const VIEW_TYPE = ["fieldConfig", "list"] as const;
 type ViewType = typeof VIEW_TYPE[number];
 
 export type FieldConfigureInfo = {
   index: number;
+  field: FieldType | FormConfigTypes;
   subIndex?: number;
-  field: string;
 };
 
 interface State {

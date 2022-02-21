@@ -1,4 +1,4 @@
-import { FormConfigProvider } from "@containers/editor/context/FormConfigContext";
+import { FormConfigProvider } from "@containers/editor/context/formConfig/FormConfigContext";
 import FormTemplateBuilderSitePanel from "@containers/editor/FormTemplateBuilderSitePanel";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

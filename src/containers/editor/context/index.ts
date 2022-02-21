@@ -1,4 +1,7 @@
-export { FormConfigProvider, useFormConfigContext } from "./FormConfigContext";
+export {
+  FormConfigProvider,
+  useFormConfigContext,
+} from "./formConfig/FormConfigContext";
 
 export {
   FormTemplateProvider,

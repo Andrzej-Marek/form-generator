@@ -1,4 +1,4 @@
-import { FieldActions } from "../components/FieldWrapper/FieldWrapper";
+import { FieldActions } from "../components/FieldActionsWrapper/FieldActionsWrapper";
 
 export type FieldProps = {
   name: string;

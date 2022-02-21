@@ -1,9 +1,10 @@
 import { DropSpace } from "@containers/editor/components";
-import { OnDrop } from "@containers/editor/context/FormConfigContext";
+import { OnDrop } from "@containers/editor/context/formConfig/FormConfigContext";
 import { FormTemplateBuilderActions } from "@containers/editor/FormTemplateBuilder";
 import { FormBody } from "@layout/form";
 import { useMemo } from "react";
 import { FormConfig, LayoutConfig } from "src/types";
+import FieldActionsWrapper from "../components/FieldActionsWrapper/FieldActionsWrapper";
 import { FieldController } from "./FieldController";
 
 export const TypeController = ({
@@ -19,14 +20,22 @@ export const TypeController = ({
 }) => {
   if (typeConfig.type === "layout") {
     return (
-      <FormBody columns={typeConfig.columns}>
-        <ColumnsFields
-          config={typeConfig.config}
-          onDrop={onDrop}
-          controllerIndex={controllerIndex}
-          actions={actions}
-        />
-      </FormBody>
+      <FieldActionsWrapper
+        actions={{
+          onConfigClick: () => actions?.configLayout(controllerIndex),
+          onDeleteClick: () => actions?.deleteLayout(controllerIndex),
+        }}
+        variant="layout"
+      >
+        <FormBody columns={typeConfig.columns}>
+          <ColumnsFields
+            config={typeConfig.config}
+            onDrop={onDrop}
+            controllerIndex={controllerIndex}
+            actions={actions}
+          />
+        </FormBody>
+      </FieldActionsWrapper>
     );
   }
 

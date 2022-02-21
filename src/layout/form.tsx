@@ -52,9 +52,11 @@ export const FormBody: FC<CommonProps & { columns: number }> = ({
     <div
       className={classNames(
         "grid gap-4",
-        `lg:grid-cols-${columns} items-end`,
+        // `lg:grid-cols-${columns} items-end`,
+        `items-end`,
         className
       )}
+      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
     >
       {children}
     </div>

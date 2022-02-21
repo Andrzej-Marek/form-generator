@@ -4,14 +4,15 @@ import { createContext, FC, useContext, useState } from "react";
 import {
   EmptyConfig,
   FieldConfig,
-  FieldType,
   FormConfig,
-  FormConfigs,
-  isFieldConfig,
   isLayoutConfig,
   LayoutConfig,
 } from "src/types";
-import { blankEmpty } from "../helpers/blankEmpty";
+import { blankEmpty } from "../../helpers/blankEmpty";
+import {
+  getFieldConfigByIndexes,
+  getLayoutConfigByIndex,
+} from "./helpers/getConfigByIndexes";
 
 export type OnDrop = (
   fieldConfig: FormConfig[number],
@@ -19,7 +20,7 @@ export type OnDrop = (
   subConfigIndex?: number
 ) => void;
 
-type Context = {
+export type Context = {
   config: FormConfig;
   initialConfig: FormConfig;
   onDrop: OnDrop;
@@ -29,13 +30,20 @@ type Context = {
     index: number,
     subIndex?: number
   ) => void;
+  updateLayoutConfig: (
+    fieldOption: keyof LayoutConfig,
+    value: string | number,
+    index: number
+  ) => void;
   deleteField: (index: number, subIndex?: number) => void;
+  deleteLayout: (index: number) => void;
   getFieldConfigByIndexes: (
     index: number,
     subIndex?: number,
     useInitial?: boolean
   ) => FieldConfig;
   resetFieldToInitial: (index: number, subIndex?: number) => FieldConfig;
+  getLayoutConfigByIndex: (index: number) => LayoutConfig;
 };
 
 const FormConfigContext = createContext<Context>({} as Context);
@@ -55,14 +63,16 @@ const updateLayoutColumn = (
     draft[index] = subConfig;
   });
 };
+
+export type FormConfigState = { draft: FormConfig; initial: FormConfig };
 export const FormConfigProvider: FC = ({ children }) => {
   // NOTE: We use draft as main config, when we're doing updating, field options then we update only draft.
   // If we are setting some field, then we use both.
   // REASON: We need a option to go back to initial values (values === fieldOptions) eg. Reset button on field options
-  const [config, setConfig] = useState<{
-    draft: FormConfig;
-    initial: FormConfig;
-  }>({ draft: [], initial: [] });
+  const [config, setConfig] = useState<FormConfigState>({
+    draft: [],
+    initial: [],
+  });
 
   const onDrop: OnDrop = (fieldConfig, index, subConfigIndex?) => {
     if (fieldConfig.type === "layout") {
@@ -146,9 +156,9 @@ export const FormConfigProvider: FC = ({ children }) => {
     // TODO: Try to make better types, if any problem with update field options
     setConfig((prevState) =>
       produce(prevState, ({ draft }) => {
+        const selectedConfig = draft[index];
         if (typeof subIndex === "number") {
-          const layoutConfig = draft[index];
-          if (isLayoutConfig(layoutConfig)) {
+          if (isLayoutConfig(selectedConfig)) {
             // @ts-ignore
             layoutConfig.config[subIndex][fieldOption] = value;
           }
@@ -160,11 +170,46 @@ export const FormConfigProvider: FC = ({ children }) => {
     );
   };
 
+  const updateLayoutConfig: Context["updateLayoutConfig"] = (
+    field,
+    value,
+    index
+  ) => {
+    setConfig((prevState) =>
+      produce(prevState, ({ draft }) => {
+        const selectedConfig = draft[index];
+
+        if (!isLayoutConfig(selectedConfig)) {
+          return;
+        }
+
+        if (field === "columns") {
+          // We want to add or move element to array
+          if (+value > +selectedConfig.columns) {
+            selectedConfig.config.push(blankEmpty);
+          } else {
+            selectedConfig.config.pop();
+          }
+          selectedConfig.columns = +value;
+          return;
+        }
+
+        // @ts-ignore
+        selectedConfig[field] = value;
+      })
+    );
+  };
+
   const resetFieldToInitial: Context["resetFieldToInitial"] = (
     index,
     subIndex
   ) => {
-    const fieldInitialConfig = getFieldConfigByIndexes(index, subIndex, true);
+    const fieldInitialConfig = getFieldConfigByIndexes(
+      config,
+      index,
+      subIndex,
+      true
+    );
 
     setConfig((prevState) =>
       produce(prevState, ({ draft }) => {
@@ -180,46 +225,6 @@ export const FormConfigProvider: FC = ({ children }) => {
     );
 
     return fieldInitialConfig;
-  };
-
-  const getConfigByIndexes = (
-    index: number,
-    subIndex?: number,
-    useInitial = false
-  ): FormConfigs => {
-    let selectedConfig: FormConfigs | undefined = undefined;
-    const configSource = useInitial ? config.initial : config.draft;
-
-    if (typeof subIndex === "number") {
-      const element = configSource[index];
-
-      if (!isLayoutConfig(element)) {
-        throw new Error(`Invalid subId for ${element.type} type`);
-      }
-      selectedConfig = element.config[subIndex];
-    } else {
-      selectedConfig = configSource[index];
-    }
-
-    if (!selectedConfig) {
-      throw new Error("Field config not found!");
-    }
-
-    return selectedConfig;
-  };
-
-  const getFieldConfigByIndexes: Context["getFieldConfigByIndexes"] = (
-    index,
-    subIndex,
-    useInitial = false
-  ): FieldConfig => {
-    // let fieldConfig: FieldConfig | undefined = undefined;
-    const config = getConfigByIndexes(index, subIndex, useInitial);
-
-    if (!isFieldConfig(config)) {
-      throw new Error(`Invalid type ${config.type}. Required a field type`);
-    }
-    return config;
   };
 
   const deleteFieldHandler = (
@@ -241,6 +246,18 @@ export const FormConfigProvider: FC = ({ children }) => {
     });
   };
 
+  const deleteLayoutHandler = (config: FormConfig, index: number) => {
+    return produce(config, (draft) => {
+      const element = config[index];
+
+      if (!isLayoutConfig(element)) {
+        throw new Error("Selected element is not layout type");
+      }
+
+      draft.splice(index, 1);
+    });
+  };
+
   const deleteField: Context["deleteField"] = (index, subIndex) => {
     setConfig((prevState) => {
       const draft = deleteFieldHandler(prevState.draft, index, subIndex);
@@ -251,6 +268,18 @@ export const FormConfigProvider: FC = ({ children }) => {
       };
     });
   };
+
+  const deleteLayout: Context["deleteLayout"] = (index) => {
+    setConfig((prevState) => {
+      const draft = deleteLayoutHandler(prevState.draft, index);
+      const initial = deleteLayoutHandler(prevState.initial, index);
+      return {
+        draft,
+        initial,
+      };
+    });
+  };
+
   return (
     <FormConfigContext.Provider
       value={{
@@ -258,9 +287,14 @@ export const FormConfigProvider: FC = ({ children }) => {
         initialConfig: config.initial,
         onDrop,
         updateField,
-        getFieldConfigByIndexes,
+        getFieldConfigByIndexes: (index, subIndex, useInitial) =>
+          getFieldConfigByIndexes(config, index, subIndex, useInitial),
         resetFieldToInitial,
         deleteField,
+        getLayoutConfigByIndex: (index) =>
+          getLayoutConfigByIndex(config, index),
+        updateLayoutConfig,
+        deleteLayout,
       }}
     >
       {children}
@@ -269,11 +303,3 @@ export const FormConfigProvider: FC = ({ children }) => {
 };
 
 export const useFormConfigContext = () => useContext(FormConfigContext);
-
-function removeItem<T>(arr: Array<T>, value: T): Array<T> {
-  const index = arr.indexOf(value);
-  if (index > -1) {
-    arr.splice(index, 1);
-  }
-  return arr;
-}
