@@ -1,7 +1,4 @@
-import Icon from "@components/icons/Icon";
-import classNames from "classnames";
 import cn from "classnames";
-import { FormikConfig } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
 export interface InputProps
@@ -15,7 +12,6 @@ export interface InputProps
   shadow?: boolean;
   variant?: "normal" | "solid" | "outline" | "line";
   size?: "small" | "medium" | "big";
-  onConfigClick?: () => void;
 }
 
 const variantClasses = {
@@ -47,26 +43,13 @@ const InputRaw = React.forwardRef<HTMLInputElement, InputProps>(
       disabled = false,
       type = "text",
       inputClassName,
-      onConfigClick,
       ...rest
     },
     ref
   ) => {
     return (
       <>
-        <div className={classNames("relative", className)}>
-          {!!onConfigClick && (
-            <div className="absolute left-0 -top-0.5 -translate-y-full">
-              <div className="flex bg-accent py-1 px-1 rounded-md">
-                <div onClick={onConfigClick}>
-                  <Icon
-                    icon="tool"
-                    className="text-white cursor-pointer transition hover:scale-110"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+        <div>
           {label && (
             <label
               htmlFor={name}

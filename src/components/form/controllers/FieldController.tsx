@@ -9,7 +9,9 @@ import {
 
 export type FieldControllerActions = {
   onConfigClick: (fieldType: FieldType) => void;
+  onDeleteClick: (fieldType: FieldType) => void;
 };
+
 export const FieldController = ({
   fieldConfig,
   actions,
@@ -27,7 +29,10 @@ export const FieldController = ({
         value={value}
         placeholder={fieldConfig.placeholder}
         required={fieldConfig.required}
-        onConfigClick={() => actions?.onConfigClick("text")}
+        actions={{
+          onConfigClick: () => actions?.onConfigClick("text"),
+          onDeleteClick: () => actions?.onDeleteClick("text"),
+        }}
       />
     );
   }

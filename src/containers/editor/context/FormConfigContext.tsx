@@ -4,12 +4,14 @@ import { createContext, FC, useContext, useState } from "react";
 import {
   EmptyConfig,
   FieldConfig,
+  FieldType,
   FormConfig,
   FormConfigs,
   isFieldConfig,
   isLayoutConfig,
   LayoutConfig,
 } from "src/types";
+import { blankEmpty } from "../helpers/blankEmpty";
 
 export type OnDrop = (
   fieldConfig: FormConfig[number],
@@ -27,6 +29,7 @@ type Context = {
     index: number,
     subIndex?: number
   ) => void;
+  deleteField: (index: number, subIndex?: number) => void;
   getFieldConfigByIndexes: (
     index: number,
     subIndex?: number,
@@ -219,6 +222,35 @@ export const FormConfigProvider: FC = ({ children }) => {
     return config;
   };
 
+  const deleteFieldHandler = (
+    config: FormConfig,
+    index: number,
+    subIndex?: number
+  ) => {
+    return produce(config, (draft) => {
+      if (typeof subIndex === "number") {
+        const element = draft[index];
+
+        if (!isLayoutConfig(element)) {
+          throw new Error(`Invalid subId for ${element.type} type`);
+        }
+        element.config[subIndex] = blankEmpty;
+      } else {
+        draft.splice(index, 1);
+      }
+    });
+  };
+
+  const deleteField: Context["deleteField"] = (index, subIndex) => {
+    setConfig((prevState) => {
+      const draft = deleteFieldHandler(prevState.draft, index, subIndex);
+      const initial = deleteFieldHandler(prevState.initial, index, subIndex);
+      return {
+        draft,
+        initial,
+      };
+    });
+  };
   return (
     <FormConfigContext.Provider
       value={{
@@ -228,6 +260,7 @@ export const FormConfigProvider: FC = ({ children }) => {
         updateField,
         getFieldConfigByIndexes,
         resetFieldToInitial,
+        deleteField,
       }}
     >
       {children}
@@ -236,3 +269,11 @@ export const FormConfigProvider: FC = ({ children }) => {
 };
 
 export const useFormConfigContext = () => useContext(FormConfigContext);
+
+function removeItem<T>(arr: Array<T>, value: T): Array<T> {
+  const index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}

@@ -5,7 +5,7 @@ import { FC, Fragment, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
 import { FieldType } from "src/types";
 import { DropSpace } from "./components";
-import { useFormTemplateAction } from "./context";
+import { useFormTemplateAction, useFormTemplateState } from "./context";
 import { useFormConfigContext } from "./context/FormConfigContext";
 
 type OwnProps = {};
@@ -14,16 +14,28 @@ type Props = OwnProps;
 
 export type FormTemplateBuilderActions = {
   configField: (fieldType: FieldType, index: number, subIndex?: number) => void;
+  deleteField: (fieldType: FieldType, index: number, subIndex?: number) => void;
 };
 
 const FormTemplateBuilder: FC<Props> = () => {
-  const { config, onDrop } = useFormConfigContext();
+  const { config, onDrop, deleteField } = useFormConfigContext();
+  const { fieldConfigureInfo } = useFormTemplateState();
   const { setFieldConfigureInfo, setView } = useFormTemplateAction();
 
   const actions: FormTemplateBuilderActions = {
     configField: (fieldType, index, subIndex) => {
       setFieldConfigureInfo({ field: fieldType, index, subIndex });
       setView("fieldConfig");
+    },
+    deleteField: (_fieldType, index, subIndex) => {
+      if (
+        fieldConfigureInfo?.index === index &&
+        fieldConfigureInfo.subIndex === subIndex
+      ) {
+        setFieldConfigureInfo(undefined);
+        setView("list");
+      }
+      deleteField(index, subIndex);
     },
   };
 

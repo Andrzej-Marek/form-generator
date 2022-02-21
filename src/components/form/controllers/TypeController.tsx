@@ -37,6 +37,8 @@ export const TypeController = ({
         actions={{
           onConfigClick: (fieldType) =>
             actions?.configField(fieldType, controllerIndex),
+          onDeleteClick: (fieldType) =>
+            actions?.deleteField(fieldType, controllerIndex),
         }}
       />
     );
@@ -80,6 +82,8 @@ const ColumnsFields = ({
             actions={{
               onConfigClick: (fieldType) =>
                 actions?.configField(fieldType, controllerIndex, index),
+              onDeleteClick: (fieldType) =>
+                actions?.deleteField(fieldType, controllerIndex, index),
             }}
           />
         );
