@@ -14,6 +14,7 @@ import {
   LayoutConfigurationForm,
   TextFieldConfigurationForm,
 } from "./configurationForms";
+import { ClickableText } from "@components/buttons";
 
 type OwnProps = {};
 
@@ -33,15 +34,16 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
       <div className="mt-4">
         {view === "fieldConfig" ? (
           <>
-            <button
+            <ClickableText
+              className="mb-4"
               onClick={() => {
                 setView("list");
                 setFieldConfigureInfo(undefined);
               }}
-              className="mb-4"
+              iconLeft="arrowLeft"
             >
               Go back to list
-            </button>
+            </ClickableText>
             {fieldConfigureInfo?.field === "layout" ? (
               <LayoutConfigView />
             ) : (

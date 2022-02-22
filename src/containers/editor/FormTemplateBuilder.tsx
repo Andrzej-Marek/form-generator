@@ -1,3 +1,4 @@
+import { ClickableText } from "@components/buttons";
 import Button from "@components/buttons/Button";
 import { Form } from "@components/form";
 import { TypeController } from "@components/form/controllers";
