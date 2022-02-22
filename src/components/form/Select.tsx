@@ -14,7 +14,7 @@ export interface SelectProps {
   label?: string;
   name: string;
   error?: string;
-  dimension?: "small" | "medium" | "big";
+  size?: "small" | "medium" | "big";
   disabled?: boolean;
   onChange?: (selectedOption: SelectOption) => void;
   options: SelectOption[];
@@ -28,12 +28,8 @@ const sizeClasses = {
   big: "h-[46px]",
 };
 
-const Input = ({
-  dimension,
-  size,
-  ...props
-}: InputProps & Pick<SelectProps, "dimension">) => (
-  <components.Input {...props} className={cn(sizeClasses[dimension!])} />
+const Input = ({ size, ...props }: InputProps & Pick<SelectProps, "size">) => (
+  <components.Input {...props} className={cn(sizeClasses[size!])} />
 );
 
 const customStyles: StylesConfig<unknown, boolean, GroupBase<unknown>> = {
@@ -64,7 +60,7 @@ const Select: FC<SelectProps> = ({
   className,
   label,
   name,
-  dimension = "medium",
+  size = "medium",
   disabled = false,
   onChange,
   options,
@@ -97,9 +93,7 @@ const Select: FC<SelectProps> = ({
         // @ts-ignore
         onChange={(event: SelectOption) => onChange?.(event)}
         components={{
-          Input: (props: InputProps) => (
-            <Input dimension={dimension} {...props} />
-          ),
+          Input: (props: InputProps) => <Input size={size} {...props} />,
         }}
         placeholder="Wybierz"
         {...rest}

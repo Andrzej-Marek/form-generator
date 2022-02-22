@@ -1,7 +1,9 @@
+import { DateFormat } from "./date";
 import { Schema } from "./formValidation";
 import { SelectOption } from "./selectOption";
 
 // Generic types for FieldConfig.type === field
+
 export const FIELD_TYPES = [
   "text",
   "checkbox",
@@ -9,6 +11,7 @@ export const FIELD_TYPES = [
   "textArea",
   "select",
   "password",
+  "date",
 ] as const;
 
 export type FieldType = typeof FIELD_TYPES[number];
@@ -39,6 +42,14 @@ export interface TextAreaFieldConfig extends GenericFieldTypeConfig<string> {
   field: "textArea";
   placeholder?: string;
   height?: number; // height in px-s
+}
+export interface DateFieldConfig
+  extends GenericFieldTypeConfig<Date | undefined> {
+  field: "date";
+  placeholder?: string;
+  dateFormat?: DateFormat;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 // When FieldConfig.field === number
@@ -79,6 +90,7 @@ export type FieldConfig = {
   | TextAreaFieldConfig
   | SelectFieldConfig
   | PasswordFieldConfig
+  | DateFieldConfig
 );
 
 //// We can make nested object, we have to add name for layout field

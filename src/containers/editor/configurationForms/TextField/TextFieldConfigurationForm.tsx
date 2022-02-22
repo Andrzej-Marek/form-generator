@@ -1,3 +1,4 @@
+import Button from "@components/buttons/Button";
 import { CheckboxField, Form, TextField } from "@components/form";
 import { useFormConfigContext } from "@containers/editor/context";
 import { FieldConfigureInfo } from "@containers/editor/context/FormTemplateContext";
@@ -47,6 +48,23 @@ const TextFieldConfigurationForm: FC<Props> = ({
     >
       {({ resetForm }) => (
         <FormWrapper>
+          <FormBody columns={2}>
+            <TextField
+              name="name"
+              label="Name"
+              size="small"
+              placeholder="Field name"
+              infoTooltip="You have to specify a name to have a uniq value of field"
+              onChange={(event) => onUpdateField("name", event.target.value)}
+            />
+            {/* <TextField
+              name="value"
+              label="Initial value"
+              size="small"
+              placeholder="Initial value"
+              onChange={(event) => onUpdateField("value", event.target.value)}
+            /> */}
+          </FormBody>
           <TextField
             name="label"
             label="Label"
@@ -63,29 +81,17 @@ const TextFieldConfigurationForm: FC<Props> = ({
               onUpdateField("placeholder", event.target.value)
             }
           />
-          <FormBody columns={2}>
-            <TextField
-              name="name"
-              label="Name"
-              size="small"
-              placeholder="Field name"
-              onChange={(event) => onUpdateField("name", event.target.value)}
-            />
-            <TextField
-              name="value"
-              label="Initial value"
-              size="small"
-              placeholder="Initial value"
-              onChange={(event) => onUpdateField("value", event.target.value)}
-            />
-          </FormBody>
-          <button type="submit">SUBMIT</button>
-          <button
+          <Button type="submit" size="small">
+            Save
+          </Button>
+          <Button
+            variant="cancelOutline"
             type="reset"
+            size="small"
             onClick={() => resetForm({ values: resetToInitialValues() })}
           >
-            RESET
-          </button>
+            Reset
+          </Button>
         </FormWrapper>
       )}
     </Form>

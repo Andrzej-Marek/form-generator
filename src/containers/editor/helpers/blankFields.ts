@@ -13,4 +13,5 @@ export const blankFields: Record<FieldType, FieldConfig> = {
   },
   text: { field: "text", value: "", name: "", type: "field" },
   textArea: { field: "textArea", value: "textArea", name: "", type: "field" },
+  date: { field: "date", name: "", type: "field", value: undefined },
 };

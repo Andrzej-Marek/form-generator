@@ -9,7 +9,11 @@ import { blankFields } from "./helpers/blankFields";
 import { blankLayout } from "./helpers/blankLayout";
 import { DraggableEditorType } from "./types";
 import { useFormConfigContext } from "./context";
-import { LayoutConfigurationForm, TextFieldConfigurationForm } from "./forms";
+import {
+  DateConfigurationForm,
+  LayoutConfigurationForm,
+  TextFieldConfigurationForm,
+} from "./configurationForms";
 
 type OwnProps = {};
 
@@ -94,7 +98,15 @@ const FieldConfigView = () => {
       />
     );
   }
-  return <></>;
+  if (config.field === "date") {
+    return (
+      <DateConfigurationForm
+        fieldConfigureInfo={fieldConfigureInfo}
+        fieldConfig={config}
+      />
+    );
+  }
+  return <div>MISSED TYPE FOR {config.field}</div>;
 };
 // TODO: Make generic wrapper for box and then make seperate for item / layout
 const FieldBox = ({ fieldType }: { fieldType: FieldType }) => {

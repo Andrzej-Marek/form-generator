@@ -26,7 +26,7 @@ export type Context = {
   onDrop: OnDrop;
   updateField: <T>(
     fieldOption: keyof T,
-    value: string,
+    value: string | number | Date | undefined,
     index: number,
     subIndex?: number
   ) => void;
@@ -160,7 +160,7 @@ export const FormConfigProvider: FC = ({ children }) => {
         if (typeof subIndex === "number") {
           if (isLayoutConfig(selectedConfig)) {
             // @ts-ignore
-            layoutConfig.config[subIndex][fieldOption] = value;
+            selectedConfig.config[subIndex][fieldOption] = value;
           }
         } else {
           // @ts-ignore

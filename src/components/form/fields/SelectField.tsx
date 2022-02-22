@@ -17,6 +17,7 @@ const SelectField: FC<Props> = ({ name, ...rest }) => {
 
   const onChange = (selected: SelectOption) => {
     setValue(selected.value);
+    rest.onChange?.(selected);
   };
 
   return <Select {...rest} {...field} error={meta.error} onChange={onChange} />;

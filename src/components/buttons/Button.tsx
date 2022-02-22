@@ -4,7 +4,7 @@ import React, { ButtonHTMLAttributes } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  variant?: "normal" | "outline" | "custom";
+  variant?: "normal" | "outline" | "custom" | "cancelOutline";
   size?: "big" | "medium" | "small";
   active?: boolean;
   loading?: boolean;
@@ -17,6 +17,8 @@ const classes = {
   custom: "border border-transparent",
   outline:
     "border border-border-400 bg-transparent text-body hover:text-light hover:bg-accent hover:border-accent",
+  cancelOutline:
+    "border border-border-400 border-red-500 bg-transparent text-red-500 text-body hover:text-light hover:bg-red-500 hover:border-red-500 focus:ring-red-500",
   loading:
     "h-4 w-4 ms-2 rounded-full border-2 border-transparent border-t-2 animate-spin",
   disabled:
@@ -45,6 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         [classes.normal]: !disabled && variant === "normal",
         [classes.disabled]: disabled && variant === "normal",
         [classes.outline]: !disabled && variant === "outline",
+        [classes.cancelOutline]: !disabled && variant === "cancelOutline",
         [classes.disabledOutline]: disabled && variant === "outline",
         [classes.small]: size === "small",
         [classes.medium]: size === "medium",

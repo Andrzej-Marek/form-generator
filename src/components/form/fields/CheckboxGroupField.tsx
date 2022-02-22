@@ -3,9 +3,9 @@ import { FieldProps } from "./fields.type";
 import { useField } from "formik";
 import Checkbox, { CheckboxProps } from "../Checkbox";
 import { SelectOption } from "src/types/selectOption";
-import FieldLabel from "../FieldLabel";
 import classNames from "classnames";
 import { getFieldName } from "./helpers";
+import FieldLabel from "../components/FieldLabel/FieldLabel";
 
 interface OwnProps {
   options: SelectOption[];

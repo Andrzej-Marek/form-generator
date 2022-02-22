@@ -6,6 +6,7 @@ import {
   NumberField,
   CheckboxField,
 } from "..";
+import DateField from "../fields/DateField";
 
 export type FieldControllerActions = {
   onConfigClick: (fieldType: FieldType) => void;
@@ -26,12 +27,33 @@ export const FieldController = ({
       <TextField
         name={name}
         label={label}
-        value={value}
+        value={value as string}
         placeholder={fieldConfig.placeholder}
         required={fieldConfig.required}
         actions={{
           onConfigClick: () => actions?.onConfigClick("text"),
           onDeleteClick: () => actions?.onDeleteClick("text"),
+        }}
+      />
+    );
+  }
+
+  if (field === "date") {
+    return (
+      <DateField
+        name={name}
+        inputProps={{
+          name,
+          label,
+          placeholder: fieldConfig.placeholder,
+          required: fieldConfig.required,
+        }}
+        minDate={fieldConfig.minDate}
+        maxDate={fieldConfig.maxDate}
+        dateFormat={fieldConfig.dateFormat}
+        actions={{
+          onConfigClick: () => actions?.onConfigClick("date"),
+          onDeleteClick: () => actions?.onDeleteClick("date"),
         }}
       />
     );

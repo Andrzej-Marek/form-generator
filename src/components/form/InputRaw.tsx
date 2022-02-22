@@ -1,5 +1,6 @@
 import cn from "classnames";
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, ReactNode } from "react";
+import FieldLabel from "./components/FieldLabel/FieldLabel";
 
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -12,6 +13,7 @@ export interface InputProps
   shadow?: boolean;
   variant?: "normal" | "solid" | "outline" | "line";
   size?: "small" | "medium" | "big";
+  infoTooltip?: ReactNode;
 }
 
 const variantClasses = {
@@ -43,6 +45,7 @@ const InputRaw = React.forwardRef<HTMLInputElement, InputProps>(
       disabled = false,
       type = "text",
       inputClassName,
+      infoTooltip,
       ...rest
     },
     ref
@@ -51,15 +54,12 @@ const InputRaw = React.forwardRef<HTMLInputElement, InputProps>(
       <>
         <div>
           {label && (
-            <label
+            <FieldLabel
+              label={label}
+              isError={!!error}
               htmlFor={name}
-              className={cn(
-                "block text-body-dark font-semibold text-sm leading-none mb-3 text-left",
-                !!error && "text-red-500"
-              )}
-            >
-              {label}
-            </label>
+              infoTooltip={infoTooltip}
+            />
           )}
           <input
             id={name}

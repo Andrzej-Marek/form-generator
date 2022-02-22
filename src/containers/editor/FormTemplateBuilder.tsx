@@ -1,5 +1,7 @@
+import Button from "@components/buttons/Button";
 import { Form } from "@components/form";
 import { TypeController } from "@components/form/controllers";
+import DateField from "@components/form/fields/DateField";
 import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
@@ -90,6 +92,7 @@ const FormTemplateBuilder: FC<Props> = () => {
         <FormWrapper>
           <DropSpace onDrop={onDrop} index={0} />
           {elements}
+          <Button type="submit">SUBMIT</Button>
         </FormWrapper>
       )}
     </Form>
