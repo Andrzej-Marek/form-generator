@@ -21,8 +21,8 @@ type OwnProps = {};
 type Props = OwnProps;
 
 const FormTemplateBuilderSitePanel: FC<Props> = () => {
-  const { setView, setFieldConfigureInfo } = useFormTemplateAction();
-  const { view, fieldConfigureInfo } = useFormTemplateState();
+  const { setView, setFieldConfigPosition } = useFormTemplateAction();
+  const { view, fieldConfigPosition } = useFormTemplateState();
 
   const fieldBoxes = useMemo(
     () => FIELD_TYPES.map((type) => <FieldBox fieldType={type} key={type} />),
@@ -38,13 +38,13 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
               className="mb-4"
               onClick={() => {
                 setView("list");
-                setFieldConfigureInfo(undefined);
+                setFieldConfigPosition(undefined);
               }}
               iconLeft="arrowLeft"
             >
               Go back to list
             </ClickableText>
-            {fieldConfigureInfo?.field === "layout" ? (
+            {fieldConfigPosition?.field === "layout" ? (
               <LayoutConfigView />
             ) : (
               <FieldConfigView />
@@ -65,37 +65,37 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
 };
 
 const LayoutConfigView = () => {
-  const { fieldConfigureInfo } = useFormTemplateState();
+  const { fieldConfigPosition } = useFormTemplateState();
   const { getLayoutConfigByIndex } = useFormConfigContext();
 
-  if (!fieldConfigureInfo) {
-    return <div>Error not fieldConfigureInfo found</div>;
+  if (!fieldConfigPosition) {
+    return <div>Error not fieldConfigPosition found</div>;
   }
-  const layoutConfig = getLayoutConfigByIndex(fieldConfigureInfo.index);
+  const layoutConfig = getLayoutConfigByIndex({
+    configIndex: fieldConfigPosition.configIndex,
+    sectionIndex: fieldConfigPosition.sectionIndex,
+  });
 
   return (
     <LayoutConfigurationForm
-      fieldConfigureInfo={fieldConfigureInfo}
+      fieldConfigPosition={fieldConfigPosition}
       layoutConfig={layoutConfig}
     />
   );
 };
 const FieldConfigView = () => {
-  const { fieldConfigureInfo } = useFormTemplateState();
+  const { fieldConfigPosition } = useFormTemplateState();
   const { getFieldConfigByIndexes } = useFormConfigContext();
 
-  if (!fieldConfigureInfo) {
-    return <div>Error not fieldConfigureInfo found</div>;
+  if (!fieldConfigPosition) {
+    return <div>Error not fieldConfigPosition found</div>;
   }
-  const config = getFieldConfigByIndexes(
-    fieldConfigureInfo.index,
-    fieldConfigureInfo.subIndex
-  );
+  const config = getFieldConfigByIndexes(fieldConfigPosition);
 
   if (config.field === "text") {
     return (
       <TextFieldConfigurationForm
-        fieldConfigureInfo={fieldConfigureInfo}
+        fieldConfigPosition={fieldConfigPosition}
         fieldConfig={config}
       />
     );
@@ -103,7 +103,7 @@ const FieldConfigView = () => {
   if (config.field === "date") {
     return (
       <DateConfigurationForm
-        fieldConfigureInfo={fieldConfigureInfo}
+        fieldConfigPosition={fieldConfigPosition}
         fieldConfig={config}
       />
     );

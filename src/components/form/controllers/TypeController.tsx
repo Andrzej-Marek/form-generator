@@ -3,27 +3,27 @@ import { OnDrop } from "@containers/editor/context/formConfig/FormConfigContext"
 import { FormTemplateBuilderActions } from "@containers/editor/FormTemplateBuilder";
 import { FormBody } from "@layout/form";
 import { useMemo } from "react";
-import { FormConfig, LayoutConfig } from "src/types";
+import { FormConfig, FormConfigPosition, LayoutConfig } from "src/types";
 import FieldActionsWrapper from "../components/FieldActionsWrapper/FieldActionsWrapper";
 import { FieldController } from "./FieldController";
 
 export const TypeController = ({
   typeConfig,
   onDrop,
-  index: controllerIndex,
+  position,
   actions,
 }: {
   typeConfig: FormConfig[number];
   onDrop: OnDrop;
-  index: number;
+  position: FormConfigPosition;
   actions?: FormTemplateBuilderActions;
 }) => {
   if (typeConfig.type === "layout") {
     return (
       <FieldActionsWrapper
         actions={{
-          onConfigClick: () => actions?.configLayout(controllerIndex),
-          onDeleteClick: () => actions?.deleteLayout(controllerIndex),
+          onConfigClick: () => actions?.configLayout(position),
+          onDeleteClick: () => actions?.deleteLayout(position),
         }}
         variant="layout"
       >
@@ -31,8 +31,8 @@ export const TypeController = ({
           <ColumnsFields
             config={typeConfig.config}
             onDrop={onDrop}
-            controllerIndex={controllerIndex}
             actions={actions}
+            position={position}
           />
         </FormBody>
       </FieldActionsWrapper>
@@ -45,9 +45,9 @@ export const TypeController = ({
         fieldConfig={typeConfig}
         actions={{
           onConfigClick: (fieldType) =>
-            actions?.configField(fieldType, controllerIndex),
+            actions?.configField(fieldType, position),
           onDeleteClick: (fieldType) =>
-            actions?.deleteField(fieldType, controllerIndex),
+            actions?.deleteField(fieldType, position),
         }}
       />
     );
@@ -59,12 +59,12 @@ export const TypeController = ({
 const ColumnsFields = ({
   config,
   onDrop,
-  controllerIndex,
+  position,
   actions,
 }: {
   config: LayoutConfig["config"];
   onDrop: OnDrop;
-  controllerIndex: number;
+  position: FormConfigPosition;
   actions?: FormTemplateBuilderActions;
 }) => {
   const elements = useMemo(
@@ -74,10 +74,10 @@ const ColumnsFields = ({
           return (
             <DropSpace
               key={index}
-              index={index}
-              onDrop={(fieldConfig, index) =>
-                onDrop(fieldConfig, controllerIndex, index)
+              onDrop={(fieldConfig) =>
+                onDrop(fieldConfig, { ...position, layoutConfigIndex: index })
               }
+              position={{ ...position, layoutConfigIndex: index }}
               label={index + 1}
               variant="component"
             />
@@ -90,9 +90,15 @@ const ColumnsFields = ({
             key={index}
             actions={{
               onConfigClick: (fieldType) =>
-                actions?.configField(fieldType, controllerIndex, index),
+                actions?.configField(fieldType, {
+                  ...position,
+                  layoutConfigIndex: index,
+                }),
               onDeleteClick: (fieldType) =>
-                actions?.deleteField(fieldType, controllerIndex, index),
+                actions?.deleteField(fieldType, {
+                  ...position,
+                  layoutConfigIndex: index,
+                }),
             }}
           />
         );

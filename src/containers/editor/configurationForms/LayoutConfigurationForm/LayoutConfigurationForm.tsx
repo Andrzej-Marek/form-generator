@@ -1,26 +1,27 @@
 import { Form, NumberField } from "@components/form";
-import { useFormConfigContext } from "@containers/editor/context";
-import { FieldConfigureInfo } from "@containers/editor/context/FormTemplateContext";
+import {
+  FieldConfigPositionInfo,
+  useFormConfigContext,
+} from "@containers/editor/context";
 import { FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { LayoutConfig } from "src/types";
 
 type OwnProps = {
-  fieldConfigureInfo: FieldConfigureInfo;
+  fieldConfigPosition: FieldConfigPositionInfo;
   layoutConfig: LayoutConfig;
 };
 
 type Props = OwnProps;
 
 const LayoutConfigurationForm: FC<Props> = ({
-  fieldConfigureInfo,
+  fieldConfigPosition,
   layoutConfig,
 }) => {
-  const { index } = fieldConfigureInfo;
   const { updateLayoutConfig } = useFormConfigContext();
 
   const onUpdateField = (field: keyof LayoutConfig, value: string) => {
-    updateLayoutConfig(field, value, index);
+    updateLayoutConfig(field, value, fieldConfigPosition);
   };
 
   const formInitialValues = useMemo(

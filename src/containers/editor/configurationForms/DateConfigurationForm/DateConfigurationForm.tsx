@@ -1,32 +1,33 @@
 import Button from "@components/buttons/Button";
 import { Form, SelectField, TextField } from "@components/form";
 import DateField from "@components/form/fields/DateField";
-import { useFormConfigContext } from "@containers/editor/context";
-import { FieldConfigureInfo } from "@containers/editor/context/FormTemplateContext";
+import {
+  FieldConfigPositionInfo,
+  useFormConfigContext,
+} from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { DateFieldConfig, DATE_FORMATS } from "src/types";
 import { NameConfigField } from "../components";
 
 type OwnProps = {
-  fieldConfigureInfo: FieldConfigureInfo;
+  fieldConfigPosition: FieldConfigPositionInfo;
   fieldConfig: DateFieldConfig;
 };
 
 type Props = OwnProps;
 
 const DateConfigurationForm: FC<Props> = ({
-  fieldConfigureInfo,
+  fieldConfigPosition,
   fieldConfig,
 }) => {
-  const { index, subIndex } = fieldConfigureInfo;
-  const { updateField, resetFieldToInitial } = useFormConfigContext();
+  const { updateField } = useFormConfigContext();
 
   const onUpdateField = (
     field: keyof DateFieldConfig,
     value: string | Date | undefined
   ) => {
-    updateField<DateFieldConfig>(field, value, index, subIndex);
+    updateField<DateFieldConfig>(field, value, fieldConfigPosition);
   };
 
   const formInitialValues = useMemo(
@@ -34,14 +35,8 @@ const DateConfigurationForm: FC<Props> = ({
     [fieldConfig]
   );
 
-  const resetToInitialValues = (): DateFieldConfig => {
-    const initial = resetFieldToInitial(index, subIndex);
-
-    if (initial.field !== "date") {
-      throw new Error("Invalid initial");
-    }
-
-    return initial;
+  const resetToInitialValues = () => {
+    console.log("API CALL");
   };
 
   return (
@@ -110,14 +105,14 @@ const DateConfigurationForm: FC<Props> = ({
           <Button type="submit" size="small">
             Save
           </Button>
-          <Button
+          {/* <Button
             variant="cancelOutline"
             type="reset"
             size="small"
             onClick={() => resetForm({ values: resetToInitialValues() })}
           >
             Reset
-          </Button>
+          </Button> */}
         </FormWrapper>
       )}
     </Form>

@@ -1,25 +1,26 @@
 import classNames from "classnames";
 import { ReactNode } from "react";
 import { useDrop } from "react-dnd";
-import { FieldConfig } from "src/types";
+import { FieldConfig, FormConfigPosition } from "src/types";
+import { OnDrop } from "../context";
 import { DraggableEditorType } from "../types";
 
 const DropSpace = ({
   onDrop,
-  index,
+  position,
   accept = [DraggableEditorType.FIELD, DraggableEditorType.LAYOUT],
   label,
   variant = "field",
 }: {
-  onDrop: (fieldConfig: FieldConfig, index: number) => void;
+  onDrop: OnDrop;
   accept?: DraggableEditorType | DraggableEditorType[];
   label?: ReactNode;
   variant?: "field" | "component";
-  index: number;
+  position: FormConfigPosition;
 }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept,
-    drop: (item, monitor) => onDrop(item.payload, index),
+    drop: (item, monitor) => onDrop(item.payload, position),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),

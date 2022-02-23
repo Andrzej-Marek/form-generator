@@ -1,12 +1,10 @@
-import { ClickableText } from "@components/buttons";
 import Button from "@components/buttons/Button";
 import { Form } from "@components/form";
 import { TypeController } from "@components/form/controllers";
-import DateField from "@components/form/fields/DateField";
 import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
-import { FieldType } from "src/types";
+import { FieldConfigPosition, FieldType } from "src/types";
 import { DropSpace } from "./components";
 import { useFormTemplateAction, useFormTemplateState } from "./context";
 import { useFormConfigContext } from "./context/formConfig/FormConfigContext";
@@ -16,70 +14,79 @@ type OwnProps = {};
 type Props = OwnProps;
 
 export type FormTemplateBuilderActions = {
-  configField: (fieldType: FieldType, index: number, subIndex?: number) => void;
-  configLayout: (index: number) => void;
-  deleteField: (fieldType: FieldType, index: number, subIndex?: number) => void;
-  deleteLayout: (index: number) => void;
+  configField: (fieldType: FieldType, position: FieldConfigPosition) => void;
+  configLayout: (position: FieldConfigPosition) => void;
+  deleteField: (fieldType: FieldType, position: FieldConfigPosition) => void;
+  deleteLayout: (position: FieldConfigPosition) => void;
 };
 
 const FormTemplateBuilder: FC<Props> = () => {
   const { config, onDrop, deleteField, deleteLayout } = useFormConfigContext();
-  const { fieldConfigureInfo } = useFormTemplateState();
-  const { setFieldConfigureInfo, setView } = useFormTemplateAction();
+  const { fieldConfigPosition } = useFormTemplateState();
+  const { setFieldConfigPosition, setView } = useFormTemplateAction();
 
+  // Action to left configure panel
   const actions: FormTemplateBuilderActions = {
-    configField: (fieldType, index, subIndex) => {
-      setFieldConfigureInfo({ field: fieldType, index, subIndex });
+    configField: (fieldType, position) => {
+      setFieldConfigPosition({ ...position, field: fieldType });
       setView("fieldConfig");
     },
-    deleteField: (_fieldType, index, subIndex) => {
+    deleteField: (_fieldType, position) => {
       if (
-        fieldConfigureInfo?.index === index &&
-        fieldConfigureInfo.subIndex === subIndex
+        fieldConfigPosition?.configIndex === position.configIndex &&
+        fieldConfigPosition.layoutConfigIndex === position.layoutConfigIndex
       ) {
-        setFieldConfigureInfo(undefined);
+        setFieldConfigPosition(undefined);
         setView("list");
       }
-      deleteField(index, subIndex);
+      deleteField(position);
     },
-    configLayout: (index) => {
-      setFieldConfigureInfo({ field: "layout", index });
+    configLayout: (position) => {
+      setFieldConfigPosition({ field: "layout", ...position });
       setView("fieldConfig");
     },
 
-    deleteLayout: (index) => {
-      setFieldConfigureInfo(undefined);
+    deleteLayout: (position) => {
+      setFieldConfigPosition(undefined);
       setView("list");
-      deleteLayout(index);
+      deleteLayout(position);
     },
   };
 
   const elements = useMemo(
     () =>
-      config.map((el, index) => (
-        <Fragment key={index}>
-          <TypeController
-            typeConfig={el}
-            onDrop={onDrop}
-            index={index}
-            actions={actions}
-          />{" "}
-          {/* + 1 because we have first element outside of array */}
-          <DropSpace onDrop={onDrop} index={index + 1} />
-        </Fragment>
-      )),
+      config.map((section, sectionIndex) =>
+        section.config.map((el, index) => (
+          <Fragment key={index}>
+            <TypeController
+              typeConfig={el}
+              onDrop={onDrop}
+              position={{ configIndex: index, sectionIndex }}
+              actions={actions}
+            />{" "}
+            {/* + 1 because we have first element outside of array */}
+            <DropSpace
+              onDrop={onDrop}
+              position={{ configIndex: index + 1, sectionIndex }}
+            />
+          </Fragment>
+        ))
+      ),
     [config]
   );
 
   const validationSchema = useMemo(() => buildYupSchema(config), [config]);
 
-  if (!config.length) {
+  if (!config[0].config.length) {
     return (
       <>
         <div className="font-heading text-center text-lg">
           Add first element :D
         </div>
-        <DropSpace onDrop={onDrop} index={0} />
+        <DropSpace
+          onDrop={onDrop}
+          position={{ sectionIndex: 0, configIndex: 0 }}
+        />
       </>
     );
   }
@@ -91,7 +98,11 @@ const FormTemplateBuilder: FC<Props> = () => {
     >
       {({ errors }) => (
         <FormWrapper>
-          <DropSpace onDrop={onDrop} index={0} />
+          {/* // TODO: Map content to render multi sections */}
+          <DropSpace
+            onDrop={onDrop}
+            position={{ sectionIndex: 0, configIndex: 0 }}
+          />
           {elements}
           <Button type="submit">SUBMIT</Button>
         </FormWrapper>

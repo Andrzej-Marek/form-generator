@@ -1,27 +1,28 @@
 import Button from "@components/buttons/Button";
-import { CheckboxField, Form, TextField } from "@components/form";
-import { useFormConfigContext } from "@containers/editor/context";
-import { FieldConfigureInfo } from "@containers/editor/context/FormTemplateContext";
+import { Form, TextField } from "@components/form";
+import {
+  FieldConfigPositionInfo,
+  useFormConfigContext,
+} from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { TextFieldConfig } from "src/types";
 
 type OwnProps = {
-  fieldConfigureInfo: FieldConfigureInfo;
+  fieldConfigPosition: FieldConfigPositionInfo;
   fieldConfig: TextFieldConfig;
 };
 
 type Props = OwnProps;
 
 const TextFieldConfigurationForm: FC<Props> = ({
-  fieldConfigureInfo,
+  fieldConfigPosition,
   fieldConfig,
 }) => {
-  const { index, subIndex } = fieldConfigureInfo;
-  const { updateField, resetFieldToInitial } = useFormConfigContext();
+  const { updateField } = useFormConfigContext();
 
   const onUpdateField = (field: keyof TextFieldConfig, value: string) => {
-    updateField<TextFieldConfig>(field, value, index, subIndex);
+    updateField<TextFieldConfig>(field, value, fieldConfigPosition);
   };
 
   const formInitialValues = useMemo(
@@ -29,14 +30,15 @@ const TextFieldConfigurationForm: FC<Props> = ({
     [fieldConfig]
   );
 
-  const resetToInitialValues = (): TextFieldConfig => {
-    const initial = resetFieldToInitial(index, subIndex);
+  const resetToInitialValues = () => {
+    console.log("API CALL TO BE");
+    // const initial = resetFieldToInitial(index, subIndex);
 
-    if (initial.field !== "text") {
-      throw new Error("Invalid initial");
-    }
+    // if (initial.field !== "text") {
+    //   throw new Error("Invalid initial");
+    // }
 
-    return initial;
+    // return initial;
   };
 
   return (
@@ -84,14 +86,14 @@ const TextFieldConfigurationForm: FC<Props> = ({
           <Button type="submit" size="small">
             Save
           </Button>
-          <Button
+          {/* <Button
             variant="cancelOutline"
             type="reset"
             size="small"
             onClick={() => resetForm({ values: resetToInitialValues() })}
           >
             Reset
-          </Button>
+          </Button> */}
         </FormWrapper>
       )}
     </Form>

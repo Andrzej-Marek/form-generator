@@ -1,5 +1,7 @@
 import {
   FieldConfig,
+  FormBuilderConfig,
+  FormConfigPosition,
   FormConfigs,
   isFieldConfig,
   isLayoutConfig,
@@ -8,23 +10,21 @@ import {
 import { FormConfigState } from "../FormConfigContext";
 
 export const getConfigByIndexes = (
-  config: FormConfigState,
-  index: number,
-  subIndex?: number,
-  useInitial = false
+  config: FormBuilderConfig,
+  { configIndex, sectionIndex, layoutConfigIndex }: FormConfigPosition
 ): FormConfigs => {
   let selectedConfig: FormConfigs | undefined = undefined;
-  const configSource = useInitial ? config.initial : config.draft;
+  const configSource = config[sectionIndex].config;
 
-  if (typeof subIndex === "number") {
-    const element = configSource[index];
+  if (typeof layoutConfigIndex === "number") {
+    const element = configSource[configIndex];
 
     if (!isLayoutConfig(element)) {
       throw new Error(`Invalid subId for ${element.type} type`);
     }
-    selectedConfig = element.config[subIndex];
+    selectedConfig = element.config[layoutConfigIndex];
   } else {
-    selectedConfig = configSource[index];
+    selectedConfig = configSource[configIndex];
   }
 
   if (!selectedConfig) {
@@ -35,12 +35,10 @@ export const getConfigByIndexes = (
 };
 
 export const getFieldConfigByIndexes = (
-  config: FormConfigState,
-  index: number,
-  subIndex?: number,
-  useInitial = false
+  config: FormBuilderConfig,
+  position: FormConfigPosition
 ): FieldConfig => {
-  const foundedConfig = getConfigByIndexes(config, index, subIndex, useInitial);
+  const foundedConfig = getConfigByIndexes(config, position);
 
   if (!isFieldConfig(foundedConfig)) {
     throw new Error(
@@ -51,16 +49,10 @@ export const getFieldConfigByIndexes = (
 };
 
 export const getLayoutConfigByIndex = (
-  config: FormConfigState,
-  index: number,
-  useInitial = false
+  config: FormBuilderConfig,
+  position: FormConfigPosition
 ): LayoutConfig => {
-  const foundedConfig = getConfigByIndexes(
-    config,
-    index,
-    undefined,
-    useInitial
-  );
+  const foundedConfig = getConfigByIndexes(config, position);
 
   if (!isLayoutConfig(foundedConfig)) {
     throw new Error(

@@ -1,27 +1,30 @@
 import { FormConfig } from "src/types/form";
 import { Schema } from "src/types/formValidation";
+import { FormBuilderConfig } from "src/types";
 import * as yup from "yup";
 
 // Here we're mapping whole fields config to mach config and we take a schema rules
 // We can make nested object, we have to add name for layout field
-export const buildYupSchema = (config: FormConfig) => {
+export const buildYupSchema = (config: FormBuilderConfig) => {
   const yupObject: any = {};
-  config.forEach((el) => {
-    if (el.type === "layout") {
-      el.config.forEach((field) => {
-        if (field.type === "empty" || !field.schema) {
+  config.forEach((section) => {
+    section.config.forEach((el) => {
+      if (el.type === "layout") {
+        el.config.forEach((field) => {
+          if (field.type === "empty" || !field.schema) {
+            return;
+          }
+          yupObject[field.name] = buildKeyValidation(field.schema);
+        });
+      }
+
+      if (el.type === "field") {
+        if (!el.schema) {
           return;
         }
-        yupObject[field.name] = buildKeyValidation(field.schema);
-      });
-    }
-
-    if (el.type === "field") {
-      if (!el.schema) {
-        return;
+        yupObject[el.name] = buildKeyValidation(el.schema);
       }
-      yupObject[el.name] = buildKeyValidation(el.schema);
-    }
+    });
   });
 
   return yup.object(yupObject);

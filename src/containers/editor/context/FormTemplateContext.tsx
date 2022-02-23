@@ -1,18 +1,15 @@
 import React from "react";
-import { FieldType, FormConfigTypes } from "src/types";
+import { FieldType, FormConfigPosition, FormConfigTypes } from "src/types";
 
 const VIEW_TYPE = ["fieldConfig", "list"] as const;
 type ViewType = typeof VIEW_TYPE[number];
 
-export type FieldConfigureInfo = {
-  index: number;
+export type FieldConfigPositionInfo = FormConfigPosition & {
   field: FieldType | FormConfigTypes;
-  subIndex?: number;
 };
-
 interface State {
   view: ViewType;
-  fieldConfigureInfo?: FieldConfigureInfo;
+  fieldConfigPosition?: FieldConfigPositionInfo;
 }
 
 type Action =
@@ -20,11 +17,14 @@ type Action =
       type: "setView";
       payload: ViewType;
     }
-  | { type: "setFieldConfigureInfo"; payload: FieldConfigureInfo | undefined };
+  | {
+      type: "setFieldConfigPosition";
+      payload: FieldConfigPositionInfo | undefined;
+    };
 
 const initialState: State = {
   view: "list",
-  fieldConfigureInfo: undefined,
+  fieldConfigPosition: undefined,
 };
 
 function formTemplateReducer(state: State, action: Action): State {
@@ -34,10 +34,10 @@ function formTemplateReducer(state: State, action: Action): State {
         ...state,
         view: action.payload,
       };
-    case "setFieldConfigureInfo":
+    case "setFieldConfigPosition":
       return {
         ...state,
-        fieldConfigureInfo: action.payload,
+        fieldConfigPosition: action.payload,
       };
   }
 }
@@ -89,9 +89,9 @@ export function useFormTemplateAction() {
         payload: view,
       });
     },
-    setFieldConfigureInfo(payload: FieldConfigureInfo | undefined) {
+    setFieldConfigPosition(payload: FieldConfigPositionInfo | undefined) {
       dispatch({
-        type: "setFieldConfigureInfo",
+        type: "setFieldConfigPosition",
         payload,
       });
     },
