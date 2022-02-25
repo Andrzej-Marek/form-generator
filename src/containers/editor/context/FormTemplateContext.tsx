@@ -10,6 +10,7 @@ export type FieldConfigPositionInfo = FormConfigPosition & {
 interface State {
   view: ViewType;
   fieldConfigPosition?: FieldConfigPositionInfo;
+  sectionConfigPosition: undefined | number;
 }
 
 type Action =
@@ -20,11 +21,17 @@ type Action =
   | {
       type: "setFieldConfigPosition";
       payload: FieldConfigPositionInfo | undefined;
+    }
+  | {
+      type: "setSectionConfigPosition";
+      payload: number | undefined;
     };
 
 const initialState: State = {
   view: "list",
   fieldConfigPosition: undefined,
+  // We have separate field for section, due to types
+  sectionConfigPosition: undefined,
 };
 
 function formTemplateReducer(state: State, action: Action): State {
@@ -37,7 +44,14 @@ function formTemplateReducer(state: State, action: Action): State {
     case "setFieldConfigPosition":
       return {
         ...state,
+        sectionConfigPosition: undefined,
         fieldConfigPosition: action.payload,
+      };
+    case "setSectionConfigPosition":
+      return {
+        ...state,
+        fieldConfigPosition: undefined,
+        sectionConfigPosition: action.payload,
       };
   }
 }
@@ -93,6 +107,12 @@ export function useFormTemplateAction() {
       dispatch({
         type: "setFieldConfigPosition",
         payload,
+      });
+    },
+    setSectionConfigPosition(sectionPosition: number | undefined) {
+      dispatch({
+        type: "setSectionConfigPosition",
+        payload: sectionPosition,
       });
     },
   };

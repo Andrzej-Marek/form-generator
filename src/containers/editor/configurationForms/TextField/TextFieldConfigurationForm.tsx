@@ -1,12 +1,12 @@
 import Button from "@components/buttons/Button";
-import { Form, TextField } from "@components/form";
+import { CheckboxField, Form, NumberField, TextField } from "@components/form";
 import {
   FieldConfigPositionInfo,
   useFormConfigContext,
 } from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
-import { TextFieldConfig } from "src/types";
+import { StringSchemaRules, TextFieldConfig } from "src/types";
 
 type OwnProps = {
   fieldConfigPosition: FieldConfigPositionInfo;
@@ -19,10 +19,23 @@ const TextFieldConfigurationForm: FC<Props> = ({
   fieldConfigPosition,
   fieldConfig,
 }) => {
-  const { updateField } = useFormConfigContext();
+  const { updateField, updateFieldSchema } = useFormConfigContext();
 
   const onUpdateField = (field: keyof TextFieldConfig, value: string) => {
     updateField<TextFieldConfig>(field, value, fieldConfigPosition);
+  };
+
+  const onUpdateFieldSchema = (
+    field: keyof StringSchemaRules,
+    value: string | number,
+    type: "value" | "errorMessage"
+  ) => {
+    updateFieldSchema<StringSchemaRules>(
+      field,
+      value,
+      type,
+      fieldConfigPosition
+    );
   };
 
   const formInitialValues = useMemo(
@@ -83,6 +96,23 @@ const TextFieldConfigurationForm: FC<Props> = ({
               onUpdateField("placeholder", event.target.value)
             }
           />
+          <div className="pb-5 text-center">VALIDATION CONFIG!!!!</div>
+          <FormBody columns={2}>
+            <NumberField
+              name="schema.rules.min.value"
+              label="Value"
+              onChange={(event) =>
+                onUpdateFieldSchema("min", +event.target.value, "value")
+              }
+            />
+            <TextField
+              name="schema.rules.min.errorMessage"
+              label="Error message"
+              onChange={(event) =>
+                onUpdateFieldSchema("min", event.target.value, "errorMessage")
+              }
+            />
+          </FormBody>
           <Button type="submit" size="small">
             Save
           </Button>

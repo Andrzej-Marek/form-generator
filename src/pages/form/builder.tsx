@@ -4,7 +4,7 @@ import FormTemplateBuilderLayout from "@containers/editor/layout/FormTemplateBui
 const Editor = () => {
   return (
     <FormTemplateBuilderLayout>
-      <div className="m-5 p-5 rounded-md shadow-200 bg-white">
+      <div className="m-5 mt-10">
         <FormTemplateBuilder />
       </div>
     </FormTemplateBuilderLayout>

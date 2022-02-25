@@ -4,7 +4,7 @@ import {
   useFormTemplateAction,
   useFormTemplateState,
 } from "@containers/editor/context/FormTemplateContext";
-import { FieldType, FIELD_TYPES, FormConfig } from "src/types";
+import { FieldType, FIELD_TYPES, FormConfig, SectionConfig } from "src/types";
 import { blankFields } from "./helpers/blankFields";
 import { blankLayout } from "./helpers/blankLayout";
 import { DraggableEditorType } from "./types";
@@ -15,6 +15,8 @@ import {
   TextFieldConfigurationForm,
 } from "./configurationForms";
 import { ClickableText } from "@components/buttons";
+import SectionConfigurationForm from "./configurationForms/SectionConfigurationForm/SectionConfigurationForm";
+import { blankSection } from "./helpers";
 
 type OwnProps = {};
 
@@ -22,12 +24,29 @@ type Props = OwnProps;
 
 const FormTemplateBuilderSitePanel: FC<Props> = () => {
   const { setView, setFieldConfigPosition } = useFormTemplateAction();
-  const { view, fieldConfigPosition } = useFormTemplateState();
+  const { view, fieldConfigPosition, sectionConfigPosition } =
+    useFormTemplateState();
 
   const fieldBoxes = useMemo(
     () => FIELD_TYPES.map((type) => <FieldBox fieldType={type} key={type} />),
     [FIELD_TYPES]
   );
+
+  const configView = useMemo(() => {
+    if (typeof sectionConfigPosition === "number") {
+      return <SectionConfigView />;
+    }
+
+    if (fieldConfigPosition?.field === "layout") {
+      return <LayoutConfigView />;
+    }
+
+    if (!!fieldConfigPosition) {
+      return <FieldConfigView />;
+    }
+
+    return <div>ERROR IN SIDE PANEL NO IF STATEMENT</div>;
+  }, [sectionConfigPosition, fieldConfigPosition]);
 
   return (
     <div className="px-2">
@@ -44,15 +63,14 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
             >
               Go back to list
             </ClickableText>
-            {fieldConfigPosition?.field === "layout" ? (
-              <LayoutConfigView />
-            ) : (
-              <FieldConfigView />
-            )}
+            {configView}
           </>
         ) : (
           <>
             <div className="text-center font-bold">Components</div>
+            <div className="grid gap-4 mb-4">
+              <SectionBox />
+            </div>
             <div className="grid gap-4 mb-4">
               <LayoutBox />
             </div>
@@ -80,6 +98,24 @@ const LayoutConfigView = () => {
     <LayoutConfigurationForm
       fieldConfigPosition={fieldConfigPosition}
       layoutConfig={layoutConfig}
+    />
+  );
+};
+
+const SectionConfigView = () => {
+  const { sectionConfigPosition } = useFormTemplateState();
+  const { config } = useFormConfigContext();
+
+  if (typeof sectionConfigPosition !== "number") {
+    return <div>Error not sectionConfigPosition found</div>;
+  }
+
+  const sectionConfig = config[sectionConfigPosition];
+
+  return (
+    <SectionConfigurationForm
+      sectionConfig={sectionConfig}
+      sectionIndex={sectionConfigPosition}
     />
   );
 };
@@ -125,6 +161,17 @@ const FieldBox = ({ fieldType }: { fieldType: FieldType }) => {
   );
 };
 
+const SectionBox = () => {
+  if (!blankSection) {
+    return <></>;
+  }
+
+  return (
+    <DraggableBox payload={blankSection} type={DraggableEditorType.SECTION}>
+      Section
+    </DraggableBox>
+  );
+};
 const LayoutBox = () => {
   if (!blankLayout) {
     return <></>;
@@ -142,7 +189,7 @@ const DraggableBox = ({
   type,
   children,
 }: {
-  payload: FormConfig[number];
+  payload: FormConfig[number] | SectionConfig;
   type: DraggableEditorType;
   children: ReactNode;
 }) => {

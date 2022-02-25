@@ -5,3 +5,4 @@
 export * from "./FieldController";
 export * from "./FormConfigController";
 export * from "./TypeController";
+export * from "./SectionController";

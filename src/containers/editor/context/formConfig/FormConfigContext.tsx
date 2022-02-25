@@ -1,4 +1,8 @@
+import { blankStringSchema } from "@containers/editor/helpers";
+import { generateBlankSection } from "@containers/editor/helpers/blankSection";
 import { insertItemAtIndex } from "@lib/insertItemAtIndex";
+import { randomString } from "@lib/randomString";
+import { set } from "@lib/set";
 import produce from "immer";
 import { createContext, FC, useContext, useState } from "react";
 import {
@@ -7,8 +11,12 @@ import {
   FormBuilderConfig,
   FormConfig,
   FormConfigPosition,
+  isFieldConfig,
   isLayoutConfig,
   LayoutConfig,
+  Schema,
+  SchemaRules,
+  SectionConfig,
 } from "src/types";
 import { blankEmpty } from "../../helpers/blankEmpty";
 import {
@@ -22,12 +30,30 @@ export type OnDrop = (
   position: FormConfigPosition
 ) => void;
 
+export type OnSectionDrop = (
+  fieldConfig: SectionConfig,
+  sectionIndex: number
+) => void;
+
 export type Context = {
   config: FormBuilderConfig;
   onDrop: OnDrop;
+  onSectionDrop: OnSectionDrop;
+  getSectionConfigByIndex: (sectionIndex: number) => SectionConfig;
+  updateSectionConfig: (
+    fieldOption: keyof Omit<SectionConfig, "config" | "type">,
+    value: string | number | Date | undefined,
+    sectionIndex: number
+  ) => void;
   updateField: <T>(
     fieldOption: keyof T,
     value: string | number | Date | undefined,
+    position: FormConfigPosition
+  ) => void;
+  updateFieldSchema: <T = SchemaRules>(
+    fieldOption: keyof T,
+    value: string | number | Date | undefined,
+    type: "value" | "errorMessage",
     position: FormConfigPosition
   ) => void;
   updateLayoutConfig: (
@@ -62,9 +88,24 @@ const updateLayoutColumn = (
 };
 
 export type FormConfigState = { draft: FormConfig; initial: FormConfig };
+
 export const FormConfigProvider: FC = ({ children }) => {
   const [config, setConfig] = useState<FormBuilderConfig>([
-    { config: [], label: "", type: "section" },
+    {
+      ...generateBlankSection(),
+      config: [
+        {
+          type: "field",
+          name: "yup",
+          field: "text",
+          value: "",
+          schema: {
+            type: "string",
+            rules: {},
+          },
+        },
+      ],
+    },
   ]);
 
   const onDrop: OnDrop = (fieldConfig, position) => {
@@ -80,6 +121,17 @@ export const FormConfigProvider: FC = ({ children }) => {
 
     setConfig((prevState) =>
       insertFormConfigAtIndex(prevState, fieldConfig, position)
+    );
+  };
+
+  const onSectionDrop: OnSectionDrop = (sectionConfig, sectionIndex) => {
+    setConfig((prevState) =>
+      produce(prevState, (draft) => {
+        draft.splice(sectionIndex, 0, {
+          ...sectionConfig,
+          name: `section-${randomString(3)}`,
+        });
+      })
     );
   };
 
@@ -110,6 +162,30 @@ export const FormConfigProvider: FC = ({ children }) => {
     );
   };
 
+  const getSectionConfigByIndex: Context["getSectionConfigByIndex"] = (
+    sectionIndex: number
+  ) => {
+    const sectionConfig = config[sectionIndex];
+
+    if (!sectionConfig) {
+      throw new Error(
+        `Failed to get section config with index ${sectionIndex}`
+      );
+    }
+    return sectionConfig;
+  };
+  const updateSectionConfig: Context["updateSectionConfig"] = (
+    option,
+    value,
+    sectionIndex
+  ) => {
+    setConfig((prevState) =>
+      produce(prevState, (draft) => {
+        // TODO: Types
+        draft[sectionIndex][option] = value as string;
+      })
+    );
+  };
   const updateField: Context["updateField"] = (
     fieldOption,
     value,
@@ -210,12 +286,47 @@ export const FormConfigProvider: FC = ({ children }) => {
     setConfig((prevState) => deleteLayoutHandler(prevState, position));
   };
 
+  // VALIDATION
+  const updateFieldSchema: Context["updateFieldSchema"] = (
+    key,
+    value,
+    type,
+    position
+  ) => {
+    setConfig((prevState) => {
+      return produce(prevState, (draft) => {
+        const element =
+          draft[position.sectionIndex].config[position.configIndex];
+
+        if (isLayoutConfig(element)) {
+          if (!position.layoutConfigIndex) {
+            throw new Error("No layout index when layout config provided");
+          }
+
+          const subElement = element.config[position.layoutConfigIndex];
+
+          if (isFieldConfig(subElement)) {
+            set(subElement.schema.rules, `[${key}][${type}]`, value);
+          }
+          return;
+        }
+
+        set(element.schema.rules, `[${key}][${type}]`, value);
+      });
+    });
+  };
+
+  console.log("config", config);
   return (
     <FormConfigContext.Provider
       value={{
         config: config,
+        updateFieldSchema,
+        getSectionConfigByIndex,
         onDrop,
+        onSectionDrop,
         updateField,
+        updateSectionConfig,
         getFieldConfigByIndexes: (position) =>
           getFieldConfigByIndexes(config, position),
         deleteField,

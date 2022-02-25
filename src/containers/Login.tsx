@@ -140,13 +140,10 @@ const config: FormConfig = [
 ];
 
 const Login: FC<Props> = () => {
-  const validationSchema = useMemo(() => buildYupSchema(config), [config]);
-
   return (
     <Form
       initialValues={{ checkbox: [], selectEnvironment: "local" }}
       onSubmit={(value) => console.log({ value })}
-      validationSchema={validationSchema}
     >
       {({ errors }) => (
         <FormWrapper>

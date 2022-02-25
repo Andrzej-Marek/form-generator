@@ -8,19 +8,13 @@ interface OwnProps {}
 
 type Props = OwnProps & FieldProps & CheckboxProps;
 
-const CheckboxField: FC<Props> = ({ name, value, ...rest }) => {
-  const [field, meta] = useField<string[]>({
+const CheckboxField: FC<Props> = ({ name, ...rest }) => {
+  const [field, meta] = useField<boolean>({
     name: getFieldName("checkbox", name),
     type: "checkbox",
   });
   return (
-    <Checkbox
-      {...field}
-      {...rest}
-      value={value}
-      checked={field.value.includes(value)}
-      error={meta.error}
-    />
+    <Checkbox {...field} {...rest} checked={field.checked} error={meta.error} />
   );
 };
 

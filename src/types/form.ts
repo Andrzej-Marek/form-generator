@@ -1,5 +1,5 @@
 import { DateFormat } from "./date";
-import { Schema } from "./formValidation";
+import { Schema, StringSchema, NumberSchema } from "./formValidation";
 import { SelectOption } from "./selectOption";
 
 // Generic types for FieldConfig.type === field
@@ -17,28 +17,31 @@ export const FIELD_TYPES = [
 export type FieldType = typeof FIELD_TYPES[number];
 export type FormConfigTypes = FormConfigs["type"];
 
-interface GenericFieldTypeConfig<Value> {
+interface GenericFieldTypeConfig<Value, SchemaType = Schema> {
   field: FieldType;
   name: string;
   label?: string;
   value: Value;
   required?: boolean;
-  schema?: Schema;
+  schema: SchemaType;
 }
 
 // When FieldConfig.field === text
-export interface TextFieldConfig extends GenericFieldTypeConfig<string> {
+export interface TextFieldConfig
+  extends GenericFieldTypeConfig<string, StringSchema> {
   field: "text";
   placeholder?: string;
 }
 
-export interface PasswordFieldConfig extends GenericFieldTypeConfig<string> {
+export interface PasswordFieldConfig
+  extends GenericFieldTypeConfig<string, StringSchema> {
   field: "password";
   placeholder?: string;
 }
 
 // When FieldConfig.field === text
-export interface TextAreaFieldConfig extends GenericFieldTypeConfig<string> {
+export interface TextAreaFieldConfig
+  extends GenericFieldTypeConfig<string, StringSchema> {
   field: "textArea";
   placeholder?: string;
   height?: number; // height in px-s
@@ -54,19 +57,22 @@ export interface DateFieldConfig
 
 // When FieldConfig.field === number
 export interface NumberFieldConfig
-  extends GenericFieldTypeConfig<number | undefined> {
+  extends GenericFieldTypeConfig<number | undefined, NumberSchema> {
   field: "number";
   placeholder?: string;
 }
 
-export interface SelectFieldConfig extends GenericFieldTypeConfig<string> {
+export interface SelectFieldConfig
+  extends GenericFieldTypeConfig<string, StringSchema> {
   field: "select";
   placeholder?: string;
   options: SelectOption[];
 }
 
 // When FieldConfig.field === checkbox
-export interface CheckboxFieldConfig extends GenericFieldTypeConfig<string> {
+// TODO: CHANGE
+export interface CheckboxFieldConfig
+  extends GenericFieldTypeConfig<boolean, StringSchema> {
   field: "checkbox";
 }
 
@@ -96,7 +102,9 @@ export type FieldConfig = {
 export type FormConfig = Array<FieldConfig | LayoutConfig>;
 
 export type SectionConfig = {
-  label: string;
+  title?: string;
+  subTitle?: string;
+  name: string;
   type: "section";
   config: Array<FieldConfig | LayoutConfig>;
 };

@@ -7,7 +7,6 @@ import {
   isLayoutConfig,
   LayoutConfig,
 } from "src/types";
-import { FormConfigState } from "../FormConfigContext";
 
 export const getConfigByIndexes = (
   config: FormBuilderConfig,
@@ -42,7 +41,7 @@ export const getFieldConfigByIndexes = (
 
   if (!isFieldConfig(foundedConfig)) {
     throw new Error(
-      `Invalid confgi type ${foundedConfig.type}. Required a field type`
+      `Invalid config type ${foundedConfig.type}. Required a field type`
     );
   }
   return foundedConfig;

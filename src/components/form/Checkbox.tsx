@@ -7,7 +7,6 @@ export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
   label?: string;
   name: string;
-  value: string;
   error?: string;
   type?: string;
   shadow?: boolean;

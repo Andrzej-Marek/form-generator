@@ -1,4 +1,3 @@
-import { FormConfig } from "src/types/form";
 import { Schema } from "src/types/formValidation";
 import { FormBuilderConfig } from "src/types";
 import * as yup from "yup";

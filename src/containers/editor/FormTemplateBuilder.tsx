@@ -1,6 +1,5 @@
-import Button from "@components/buttons/Button";
 import { Form } from "@components/form";
-import { TypeController } from "@components/form/controllers";
+import SectionController from "@components/form/controllers/SectionController";
 import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
@@ -16,14 +15,17 @@ type Props = OwnProps;
 export type FormTemplateBuilderActions = {
   configField: (fieldType: FieldType, position: FieldConfigPosition) => void;
   configLayout: (position: FieldConfigPosition) => void;
+  configSection: (sectionIndex: number) => void;
   deleteField: (fieldType: FieldType, position: FieldConfigPosition) => void;
   deleteLayout: (position: FieldConfigPosition) => void;
 };
 
 const FormTemplateBuilder: FC<Props> = () => {
-  const { config, onDrop, deleteField, deleteLayout } = useFormConfigContext();
+  const { config, onDrop, onSectionDrop, deleteField, deleteLayout } =
+    useFormConfigContext();
   const { fieldConfigPosition } = useFormTemplateState();
-  const { setFieldConfigPosition, setView } = useFormTemplateAction();
+  const { setFieldConfigPosition, setView, setSectionConfigPosition } =
+    useFormTemplateAction();
 
   // Action to left configure panel
   const actions: FormTemplateBuilderActions = {
@@ -33,8 +35,9 @@ const FormTemplateBuilder: FC<Props> = () => {
     },
     deleteField: (_fieldType, position) => {
       if (
-        fieldConfigPosition?.configIndex === position.configIndex &&
-        fieldConfigPosition.layoutConfigIndex === position.layoutConfigIndex
+        !fieldConfigPosition ||
+        (fieldConfigPosition?.configIndex === position.configIndex &&
+          fieldConfigPosition?.layoutConfigIndex === position.layoutConfigIndex)
       ) {
         setFieldConfigPosition(undefined);
         setView("list");
@@ -45,7 +48,10 @@ const FormTemplateBuilder: FC<Props> = () => {
       setFieldConfigPosition({ field: "layout", ...position });
       setView("fieldConfig");
     },
-
+    configSection: (sectionIndex) => {
+      setSectionConfigPosition(sectionIndex);
+      setView("fieldConfig");
+    },
     deleteLayout: (position) => {
       setFieldConfigPosition(undefined);
       setView("list");
@@ -53,60 +59,41 @@ const FormTemplateBuilder: FC<Props> = () => {
     },
   };
 
-  const elements = useMemo(
-    () =>
-      config.map((section, sectionIndex) =>
-        section.config.map((el, index) => (
-          <Fragment key={index}>
-            <TypeController
-              typeConfig={el}
-              onDrop={onDrop}
-              position={{ configIndex: index, sectionIndex }}
-              actions={actions}
-            />{" "}
-            {/* + 1 because we have first element outside of array */}
-            <DropSpace
-              onDrop={onDrop}
-              position={{ configIndex: index + 1, sectionIndex }}
-            />
-          </Fragment>
-        ))
-      ),
-    [config]
-  );
-
   const validationSchema = useMemo(() => buildYupSchema(config), [config]);
 
-  if (!config[0].config.length) {
-    return (
-      <>
-        <div className="font-heading text-center text-lg">
-          Add first element :D
-        </div>
-        <DropSpace
-          onDrop={onDrop}
-          position={{ sectionIndex: 0, configIndex: 0 }}
-        />
-      </>
-    );
-  }
+  const sections = useMemo(() => {
+    return config.map((section, sectionIndex) => (
+      <SectionController
+        key={sectionIndex}
+        actions={actions}
+        config={section}
+        onDrop={onDrop}
+        onSectionDrop={onSectionDrop}
+        sectionIndex={sectionIndex}
+      />
+    ));
+  }, [config]);
+
+  // if (!config[0].config.length) {
+  //   return (
+  //     <>
+  //       <div className="font-heading text-center text-lg">
+  //         Add first element :D
+  //       </div>
+  //       <DropSpace
+  //         onDrop={onDrop}
+  //         position={{ sectionIndex: 0, configIndex: 0 }}
+  //       />
+  //     </>
+  //   );
+  // }
   return (
     <Form
       initialValues={{ checkbox: [], selectEnvironment: "local" }}
       onSubmit={(value) => console.log({ value })}
       validationSchema={validationSchema}
     >
-      {({ errors }) => (
-        <FormWrapper>
-          {/* // TODO: Map content to render multi sections */}
-          <DropSpace
-            onDrop={onDrop}
-            position={{ sectionIndex: 0, configIndex: 0 }}
-          />
-          {elements}
-          <Button type="submit">SUBMIT</Button>
-        </FormWrapper>
-      )}
+      {({ errors }) => <FormWrapper>{sections}</FormWrapper>}
     </Form>
   );
 };

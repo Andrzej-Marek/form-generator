@@ -3,13 +3,13 @@ export type ValidationOption<T = "string" | "number" | "boolean"> = {
   errorMessage?: string;
 };
 
-type StringRules = {
+export type StringSchemaRules = {
   min?: ValidationOption<number>;
   max?: ValidationOption<number>;
   required?: ValidationOption<boolean>;
 };
 
-type NumberRules = {
+export type NumberSchemaRules = {
   min?: ValidationOption<number>;
   max?: ValidationOption<number>;
   required?: ValidationOption<boolean>;
@@ -17,12 +17,13 @@ type NumberRules = {
 
 export type StringSchema = {
   type: "string";
-  rules: StringRules;
+  rules: StringSchemaRules;
 };
 
 export type NumberSchema = {
   type: "number";
-  rules: NumberRules;
+  rules: NumberSchemaRules;
 };
 
+export type SchemaRules = StringSchemaRules | NumberSchemaRules;
 export type Schema = StringSchema | NumberSchema;
