@@ -14,7 +14,17 @@ const CheckboxField: FC<Props> = ({ name, ...rest }) => {
     type: "checkbox",
   });
   return (
-    <Checkbox {...field} {...rest} checked={field.checked} error={meta.error} />
+    <Checkbox
+      {...field}
+      {...rest}
+      onChange={(event) => {
+        field.onChange?.(event);
+        rest.onChange?.(event);
+      }}
+      checked={field.checked}
+      error={meta.error}
+      value={undefined}
+    />
   );
 };
 

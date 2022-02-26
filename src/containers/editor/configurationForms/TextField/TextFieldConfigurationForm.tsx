@@ -1,5 +1,5 @@
 import Button from "@components/buttons/Button";
-import { CheckboxField, Form, NumberField, TextField } from "@components/form";
+import { Form, SwitchField, TextField } from "@components/form";
 import {
   FieldConfigPositionInfo,
   useFormConfigContext,
@@ -7,6 +7,9 @@ import {
 import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { StringSchemaRules, TextFieldConfig } from "src/types";
+import { ValidationRuleConfigField } from "../components";
+import { toFormModalValidation } from "../helpers";
+import { FieldConfigurationFormModel } from "../types";
 
 type OwnProps = {
   fieldConfigPosition: FieldConfigPositionInfo;
@@ -15,11 +18,17 @@ type OwnProps = {
 
 type Props = OwnProps;
 
+type FormModel = FieldConfigurationFormModel<
+  TextFieldConfig,
+  StringSchemaRules
+>;
+
 const TextFieldConfigurationForm: FC<Props> = ({
   fieldConfigPosition,
   fieldConfig,
 }) => {
-  const { updateField, updateFieldSchema } = useFormConfigContext();
+  const { updateField, updateFieldSchema, resetValidationRule } =
+    useFormConfigContext();
 
   const onUpdateField = (field: keyof TextFieldConfig, value: string) => {
     updateField<TextFieldConfig>(field, value, fieldConfigPosition);
@@ -38,6 +47,19 @@ const TextFieldConfigurationForm: FC<Props> = ({
     );
   };
 
+  const onValidationCheck = (
+    field: keyof StringSchemaRules,
+    checked: boolean
+  ) => {
+    console.log("chec", checked);
+    if (checked) {
+      return;
+    }
+    console.log("HERERE");
+
+    resetValidationRule(field, fieldConfigPosition);
+  };
+
   const formInitialValues = useMemo(
     () => configToInitialValues(fieldConfig),
     [fieldConfig]
@@ -53,16 +75,23 @@ const TextFieldConfigurationForm: FC<Props> = ({
 
     // return initial;
   };
+  console.log("fff", fieldConfig);
 
   return (
-    <Form<TextFieldConfig>
+    <Form<FormModel>
       initialValues={formInitialValues}
       onSubmit={(value) => console.log({ value })}
       enableReinitialize
       // validationSchema={validationSchema}
     >
-      {({ resetForm }) => (
+      {({ resetForm, values }) => (
         <FormWrapper>
+          {console.log("valuie", values)}
+          <SwitchField
+            name="test"
+            label="HELLO THERE"
+            onChange={(checked) => console.log("checked", checked)}
+          />
           <FormBody columns={2}>
             <TextField
               name="name"
@@ -97,30 +126,29 @@ const TextFieldConfigurationForm: FC<Props> = ({
             }
           />
           <div className="pb-5 text-center">VALIDATION CONFIG!!!!</div>
-          <FormBody columns={2}>
-            <NumberField
-              name="schema.rules.min.value"
-              label="Value"
-              onChange={(event) =>
-                onUpdateFieldSchema("min", +event.target.value, "value")
-              }
-            />
-            <TextField
-              name="schema.rules.min.errorMessage"
-              label="Error message"
-              onChange={(event) =>
-                onUpdateFieldSchema("min", event.target.value, "errorMessage")
-              }
-            />
-          </FormBody>
+
+          <ValidationRuleConfigField
+            label="Min value"
+            fieldKey="min"
+            onChangeFieldSchema={onUpdateFieldSchema}
+            onValidationCheck={onValidationCheck}
+          />
+          <ValidationRuleConfigField
+            label="Max value"
+            fieldKey="max"
+            onChangeFieldSchema={onUpdateFieldSchema}
+            onValidationCheck={onValidationCheck}
+          />
+
           <Button type="submit" size="small">
             Save
           </Button>
+
           {/* <Button
             variant="cancelOutline"
             type="reset"
             size="small"
-            onClick={() => resetForm({ values: resetToInitialValues() })}
+            onClick={() => resetForm({ values: formInitialValues })}
           >
             Reset
           </Button> */}
@@ -130,7 +158,7 @@ const TextFieldConfigurationForm: FC<Props> = ({
   );
 };
 
-const configToInitialValues = (config: TextFieldConfig): TextFieldConfig => ({
+const configToInitialValues = (config: TextFieldConfig): FormModel => ({
   field: "text",
   name: config.name,
   value: config.value,
@@ -138,6 +166,7 @@ const configToInitialValues = (config: TextFieldConfig): TextFieldConfig => ({
   label: config.label ?? "",
   required: config.required ?? false,
   schema: config.schema ?? undefined,
+  validation: toFormModalValidation(config.schema.rules),
 });
 
 export default TextFieldConfigurationForm;

@@ -62,3 +62,21 @@ export const FormBody: FC<CommonProps & { columns: number }> = ({
     </div>
   );
 };
+
+export const FormGrid: FC<
+  CommonProps & { template: "1fr 1fr" | "2fr 1fr" | "1fr 2fr" | "1fr 3fr" }
+> = ({ className, template, children }) => {
+  return (
+    <div
+      className={classNames(
+        "grid gap-4",
+        // `lg:grid-cols-${columns} items-end`,
+        `items-end`,
+        className
+      )}
+      style={{ gridTemplateColumns: template }}
+    >
+      {children}
+    </div>
+  );
+};

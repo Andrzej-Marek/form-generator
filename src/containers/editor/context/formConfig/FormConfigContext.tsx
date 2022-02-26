@@ -61,6 +61,10 @@ export type Context = {
     value: string | number,
     position: FormConfigPosition
   ) => void;
+  resetValidationRule: <T = SchemaRules>(
+    ruleField: keyof SchemaRules,
+    position: FormConfigPosition
+  ) => void;
   deleteField: (position: FormConfigPosition) => void;
   deleteLayout: (position: FormConfigPosition) => void;
   getFieldConfigByIndexes: (position: FormConfigPosition) => FieldConfig;
@@ -316,7 +320,17 @@ export const FormConfigProvider: FC = ({ children }) => {
     });
   };
 
-  console.log("config", config);
+  const resetValidationRule: Context["resetValidationRule"] = (
+    ruleField,
+    position
+  ) => {
+    setConfig((prevState) =>
+      produce(prevState, (draft) => {
+        const fieldElement = getFieldConfigByIndexes(draft, position);
+        delete fieldElement.schema.rules[ruleField];
+      })
+    );
+  };
   return (
     <FormConfigContext.Provider
       value={{
@@ -327,6 +341,7 @@ export const FormConfigProvider: FC = ({ children }) => {
         onSectionDrop,
         updateField,
         updateSectionConfig,
+        resetValidationRule,
         getFieldConfigByIndexes: (position) =>
           getFieldConfigByIndexes(config, position),
         deleteField,

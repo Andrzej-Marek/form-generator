@@ -12,6 +12,7 @@ export const FIELD_TYPES = [
   "select",
   "password",
   "date",
+  "switch",
 ] as const;
 
 export type FieldType = typeof FIELD_TYPES[number];
@@ -74,6 +75,10 @@ export interface SelectFieldConfig
 export interface CheckboxFieldConfig
   extends GenericFieldTypeConfig<boolean, StringSchema> {
   field: "checkbox";
+}
+export interface SwitchFieldConfig
+  extends GenericFieldTypeConfig<boolean, StringSchema> {
+  field: "switch";
 }
 
 export type LayoutConfig = {
