@@ -8,6 +8,7 @@ import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
 import { StringSchemaRules, TextFieldConfig } from "src/types";
 import { ValidationRuleConfigField } from "../components";
+import ValidationBooleanRuleConfigField from "../components/ValidationBooleanRuleConfigField/ValidationBooleanRuleConfigField";
 import { toFormModalValidation } from "../helpers";
 import { FieldConfigurationFormModel } from "../types";
 
@@ -36,7 +37,7 @@ const TextFieldConfigurationForm: FC<Props> = ({
 
   const onUpdateFieldSchema = (
     field: keyof StringSchemaRules,
-    value: string | number,
+    value: string | number | boolean,
     type: "value" | "errorMessage"
   ) => {
     updateFieldSchema<StringSchemaRules>(
@@ -86,12 +87,6 @@ const TextFieldConfigurationForm: FC<Props> = ({
     >
       {({ resetForm, values }) => (
         <FormWrapper>
-          {console.log("valuie", values)}
-          <SwitchField
-            name="test"
-            label="HELLO THERE"
-            onChange={(checked) => console.log("checked", checked)}
-          />
           <FormBody columns={2}>
             <TextField
               name="name"
@@ -130,6 +125,7 @@ const TextFieldConfigurationForm: FC<Props> = ({
           <ValidationRuleConfigField
             label="Min value"
             fieldKey="min"
+            type="number"
             onChangeFieldSchema={onUpdateFieldSchema}
             onValidationCheck={onValidationCheck}
           />
@@ -137,9 +133,24 @@ const TextFieldConfigurationForm: FC<Props> = ({
             label="Max value"
             fieldKey="max"
             onChangeFieldSchema={onUpdateFieldSchema}
+            type="number"
             onValidationCheck={onValidationCheck}
           />
 
+          {/* <ValidationRuleConfigField
+            label="Required"
+	          type="boolean"
+            fieldKey="required"
+            onChangeFieldSchema={onUpdateFieldSchema}
+            onValidationCheck={onValidationCheck}
+          /> */}
+
+          <ValidationBooleanRuleConfigField
+            label="Required"
+            fieldKey="required"
+            onChangeFieldSchema={onUpdateFieldSchema}
+            onValidationCheck={onValidationCheck}
+          />
           <Button type="submit" size="small">
             Save
           </Button>

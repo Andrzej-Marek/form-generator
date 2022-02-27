@@ -11,10 +11,10 @@ export type SwitchProps = {
 
 type Props = SwitchProps;
 
-const Switch: FC<Props> = ({ checked, label, onChange }) => {
+const Switch: FC<Props> = ({ checked, className, label, onChange }) => {
   return (
     <HeadlessSwitch.Group>
-      <div className="flex items-center">
+      <div className={classNames(className, "flex items-center")}>
         <HeadlessSwitch
           checked={checked}
           onChange={onChange}

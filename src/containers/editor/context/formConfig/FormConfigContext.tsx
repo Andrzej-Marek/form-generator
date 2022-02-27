@@ -52,7 +52,7 @@ export type Context = {
   ) => void;
   updateFieldSchema: <T = SchemaRules>(
     fieldOption: keyof T,
-    value: string | number | Date | undefined,
+    value: string | number | Date | undefined | boolean,
     type: "value" | "errorMessage",
     position: FormConfigPosition
   ) => void;

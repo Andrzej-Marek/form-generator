@@ -9,7 +9,7 @@ interface OwnProps {}
 
 type Props = OwnProps & FieldProps & Partial<SwitchProps>;
 
-const SwitchField: FC<Props> = ({ name, className, actions, ...rest }) => {
+const SwitchField: FC<Props> = ({ name, actions, ...rest }) => {
   const [field, meta, { setValue }] = useField<boolean>({
     name: getFieldName("switch", name),
     type: "checkbox",
