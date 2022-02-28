@@ -12,10 +12,10 @@ import { useFormConfigContext } from "./context";
 import {
   DateConfigurationForm,
   LayoutConfigurationForm,
+  SectionConfigurationForm,
   TextFieldConfigurationForm,
 } from "./configurationForms";
 import { ClickableText } from "@components/buttons";
-import SectionConfigurationForm from "./configurationForms/SectionConfigurationForm/SectionConfigurationForm";
 import { blankSection } from "./helpers";
 
 type OwnProps = {};
@@ -119,6 +119,7 @@ const SectionConfigView = () => {
     />
   );
 };
+
 const FieldConfigView = () => {
   const { fieldConfigPosition } = useFormTemplateState();
   const { getFieldConfigByIndexes } = useFormConfigContext();

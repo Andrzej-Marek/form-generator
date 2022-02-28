@@ -102,6 +102,7 @@ export type FieldConfig = {
   | SelectFieldConfig
   | PasswordFieldConfig
   | DateFieldConfig
+  | SwitchFieldConfig
 );
 
 export type FormConfig = Array<FieldConfig | LayoutConfig>;

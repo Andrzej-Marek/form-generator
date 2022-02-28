@@ -66,10 +66,12 @@ const ValidationRuleConfigField: FC<Props> = ({
     }
 
     return <></>;
-  }, [type]);
+  }, [type, onChangeFieldSchema]);
+
   return (
     <>
       <SwitchField
+        size="sm"
         name={`validation.${fieldKey}`}
         label={label}
         onChange={(checked) => {

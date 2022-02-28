@@ -4,7 +4,7 @@ export const blankFields: Record<FieldType, FieldConfig> = {
   checkbox: {
     field: "checkbox",
     value: false,
-    name: "",
+    name: "checkbox",
     type: "field",
     schema: { type: "string", rules: {} },
   },
@@ -49,6 +49,13 @@ export const blankFields: Record<FieldType, FieldConfig> = {
     name: "",
     type: "field",
     value: undefined,
+    schema: { type: "string", rules: {} },
+  },
+  switch: {
+    field: "switch",
+    name: "",
+    type: "field",
+    value: false,
     schema: { type: "string", rules: {} },
   },
 };

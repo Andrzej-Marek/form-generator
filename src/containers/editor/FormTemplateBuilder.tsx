@@ -75,26 +75,13 @@ const FormTemplateBuilder: FC<Props> = () => {
     ));
   }, [config]);
 
-  // if (!config[0].config.length) {
-  //   return (
-  //     <>
-  //       <div className="font-heading text-center text-lg">
-  //         Add first element :D
-  //       </div>
-  //       <DropSpace
-  //         onDrop={onDrop}
-  //         position={{ sectionIndex: 0, configIndex: 0 }}
-  //       />
-  //     </>
-  //   );
-  // }
   return (
     <Form
       initialValues={{ checkbox: [], selectEnvironment: "local" }}
       onSubmit={(value) => console.log({ value })}
       validationSchema={validationSchema}
     >
-      {({ errors }) => <FormWrapper>{sections}</FormWrapper>}
+      {() => <FormWrapper>{sections}</FormWrapper>}
     </Form>
   );
 };

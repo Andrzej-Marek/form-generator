@@ -1,5 +1,4 @@
 import { SwitchField, TextField } from "@components/form";
-import { FormGrid } from "@layout/form";
 import { useField } from "formik";
 import { FC } from "react";
 import { StringSchemaRules } from "src/types";
@@ -7,7 +6,7 @@ import { ValidationRuleConfigCommonProps } from "../ValidationRuleConfigField/Va
 
 type OwnProps = {
   label: string;
-} & ValidationRuleConfigCommonProps<StringSchemaRules, boolean>;
+} & ValidationRuleConfigCommonProps<StringSchemaRules, boolean | string>;
 
 type Props = OwnProps;
 
@@ -22,8 +21,10 @@ const ValidationBooleanRuleConfigField: FC<Props> = ({
   return (
     <div>
       <SwitchField
+        size="sm"
         className="mb-2"
-        name={`schema.rules.${fieldKey}.value`}
+        name={`validation.${fieldKey}`}
+        // name={`schema.rules.${fieldKey}.value`}
         label={label}
         onChange={(checked) => {
           onChangeFieldSchema(fieldKey, checked, "value");
@@ -37,11 +38,7 @@ const ValidationBooleanRuleConfigField: FC<Props> = ({
           name={`schema.rules.${fieldKey}.errorMessage`}
           label="Error message"
           onChange={(event) =>
-            onChangeFieldSchema(
-              fieldKey,
-              event.target.value as never,
-              "errorMessage"
-            )
+            onChangeFieldSchema(fieldKey, event.target.value, "errorMessage")
           }
         />
       )}

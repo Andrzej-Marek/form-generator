@@ -1,11 +1,12 @@
 import Button from "@components/buttons/Button";
-import { Form, SwitchField, TextField } from "@components/form";
+import { Form, TextField } from "@components/form";
 import {
   FieldConfigPositionInfo,
   useFormConfigContext,
+  useFormTemplateState,
 } from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { StringSchemaRules, TextFieldConfig } from "src/types";
 import { ValidationRuleConfigField } from "../components";
 import ValidationBooleanRuleConfigField from "../components/ValidationBooleanRuleConfigField/ValidationBooleanRuleConfigField";
@@ -28,6 +29,8 @@ const TextFieldConfigurationForm: FC<Props> = ({
   fieldConfigPosition,
   fieldConfig,
 }) => {
+  const { fieldConfigPosition: position } = useFormTemplateState();
+  // const [position] = useState(fieldConfigPosition);
   const { updateField, updateFieldSchema, resetValidationRule } =
     useFormConfigContext();
 
@@ -40,23 +43,16 @@ const TextFieldConfigurationForm: FC<Props> = ({
     value: string | number | boolean,
     type: "value" | "errorMessage"
   ) => {
-    updateFieldSchema<StringSchemaRules>(
-      field,
-      value,
-      type,
-      fieldConfigPosition
-    );
+    updateFieldSchema<StringSchemaRules>(field, value, type, position!);
   };
 
   const onValidationCheck = (
     field: keyof StringSchemaRules,
     checked: boolean
   ) => {
-    console.log("chec", checked);
     if (checked) {
       return;
     }
-    console.log("HERERE");
 
     resetValidationRule(field, fieldConfigPosition);
   };
@@ -76,7 +72,6 @@ const TextFieldConfigurationForm: FC<Props> = ({
 
     // return initial;
   };
-  console.log("fff", fieldConfig);
 
   return (
     <Form<FormModel>
@@ -136,14 +131,6 @@ const TextFieldConfigurationForm: FC<Props> = ({
             type="number"
             onValidationCheck={onValidationCheck}
           />
-
-          {/* <ValidationRuleConfigField
-            label="Required"
-	          type="boolean"
-            fieldKey="required"
-            onChangeFieldSchema={onUpdateFieldSchema}
-            onValidationCheck={onValidationCheck}
-          /> */}
 
           <ValidationBooleanRuleConfigField
             label="Required"

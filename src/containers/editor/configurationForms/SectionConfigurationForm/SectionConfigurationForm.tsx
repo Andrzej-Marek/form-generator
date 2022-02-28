@@ -1,12 +1,9 @@
 import Button from "@components/buttons/Button";
 import { Form, TextField } from "@components/form";
-import {
-  FieldConfigPositionInfo,
-  useFormConfigContext,
-} from "@containers/editor/context";
+import { useFormConfigContext } from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
 import { FC, useMemo } from "react";
-import { SectionConfig, TextFieldConfig } from "src/types";
+import { SectionConfig } from "src/types";
 
 type OwnProps = {
   sectionIndex: number;
@@ -35,13 +32,6 @@ const SectionConfigurationForm: FC<Props> = ({
 
   const resetToInitialValues = () => {
     console.log("API CALL TO BE");
-    // const initial = resetFieldToInitial(index, subIndex);
-
-    // if (initial.field !== "text") {
-    //   throw new Error("Invalid initial");
-    // }
-
-    // return initial;
   };
 
   return (

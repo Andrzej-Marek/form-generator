@@ -17,7 +17,7 @@ const FieldLabel: FC<Props> = ({ label, htmlFor, isError, infoTooltip }) => {
       htmlFor={htmlFor}
       className={classNames(
         "text-body-dark font-semibold text-sm leading-none mb-3 text-left flex items-center",
-        isError && "text-red-500"
+        isError && "text-form-error"
       )}
     >
       <span>{label}</span>

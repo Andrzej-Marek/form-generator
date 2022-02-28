@@ -40,6 +40,7 @@ module.exports = {
         "10px": "0.625rem",
       },
       colors: {
+        "form-error": "red-500",
         light: withOpacity("--color-light"),
         dark: withOpacity("--color-dark"),
         accent: withOpacity("--color-accent"),

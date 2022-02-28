@@ -1,6 +1,4 @@
-import { blankStringSchema } from "@containers/editor/helpers";
 import { generateBlankSection } from "@containers/editor/helpers/blankSection";
-import { insertItemAtIndex } from "@lib/insertItemAtIndex";
 import { randomString } from "@lib/randomString";
 import { set } from "@lib/set";
 import produce from "immer";
@@ -14,7 +12,6 @@ import {
   isFieldConfig,
   isLayoutConfig,
   LayoutConfig,
-  Schema,
   SchemaRules,
   SectionConfig,
 } from "src/types";
@@ -95,21 +92,7 @@ export type FormConfigState = { draft: FormConfig; initial: FormConfig };
 
 export const FormConfigProvider: FC = ({ children }) => {
   const [config, setConfig] = useState<FormBuilderConfig>([
-    {
-      ...generateBlankSection(),
-      config: [
-        {
-          type: "field",
-          name: "yup",
-          field: "text",
-          value: "",
-          schema: {
-            type: "string",
-            rules: {},
-          },
-        },
-      ],
-    },
+    generateBlankSection(),
   ]);
 
   const onDrop: OnDrop = (fieldConfig, position) => {
@@ -118,13 +101,17 @@ export const FormConfigProvider: FC = ({ children }) => {
       return;
     }
 
+    const config = {
+      ...fieldConfig,
+      name: `${fieldConfig.field}-${randomString(3)}`,
+    };
     if (typeof position.layoutConfigIndex === "number") {
-      setLayoutColumn(fieldConfig, position as Required<FormConfigPosition>);
+      setLayoutColumn(config, position as Required<FormConfigPosition>);
       return;
     }
 
     setConfig((prevState) =>
-      insertFormConfigAtIndex(prevState, fieldConfig, position)
+      insertFormConfigAtIndex(prevState, config, position)
     );
   };
 
@@ -303,19 +290,19 @@ export const FormConfigProvider: FC = ({ children }) => {
           draft[position.sectionIndex].config[position.configIndex];
 
         if (isLayoutConfig(element)) {
-          if (!position.layoutConfigIndex) {
+          if (typeof position.layoutConfigIndex !== "number") {
             throw new Error("No layout index when layout config provided");
           }
 
           const subElement = element.config[position.layoutConfigIndex];
 
           if (isFieldConfig(subElement)) {
-            set(subElement.schema.rules, `[${key}][${type}]`, value);
+            set(subElement.schema.rules, `${key}.${type}`, value);
           }
           return;
         }
 
-        set(element.schema.rules, `[${key}][${type}]`, value);
+        set(element.schema.rules, `${key}.${type}`, value);
       });
     });
   };

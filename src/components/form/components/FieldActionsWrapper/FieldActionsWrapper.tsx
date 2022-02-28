@@ -20,7 +20,7 @@ const FieldActionsWrapper: FC<Props> = ({
   children,
 }) => {
   return (
-    <div className="relative ">
+    <div className="relative">
       {!!actions && <FieldActions actions={actions} variant={variant} />}
       {children}
     </div>
