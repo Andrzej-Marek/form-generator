@@ -91,6 +91,10 @@ export const FieldController = ({
         name={name}
         label={label}
         placeholder={fieldConfig.placeholder}
+        actions={{
+          onConfigClick: () => actions?.onConfigClick("number"),
+          onDeleteClick: () => actions?.onDeleteClick("number"),
+        }}
       />
     );
   }

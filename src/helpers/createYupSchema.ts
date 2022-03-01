@@ -44,7 +44,7 @@ const buildKeyValidation = (schema: Schema) => {
     }
 
     if (method === "required") {
-      validator = validator.required(config.errorMessage);
+      validator = validator.required(config.errorMessage?.trim() || undefined);
       return;
     }
 

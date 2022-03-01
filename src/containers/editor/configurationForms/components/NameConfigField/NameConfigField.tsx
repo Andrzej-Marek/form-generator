@@ -1,5 +1,5 @@
 import { TextField } from "@components/form";
-import { FC } from "react";
+import { ChangeEvent, FC } from "react";
 
 type OwnProps = {
   onChange: (value: string) => void;
@@ -8,6 +8,11 @@ type OwnProps = {
 type Props = OwnProps;
 
 const NameConfigField: FC<Props> = ({ onChange }) => {
+  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    onChange(value);
+  };
   return (
     <TextField
       name="name"
@@ -15,7 +20,7 @@ const NameConfigField: FC<Props> = ({ onChange }) => {
       size="small"
       placeholder="Field name"
       infoTooltip="You have to specify a name to have a uniq value of field"
-      onChange={(event) => onChange(event.target.value)}
+      onChange={onChangeHandler}
     />
   );
 };

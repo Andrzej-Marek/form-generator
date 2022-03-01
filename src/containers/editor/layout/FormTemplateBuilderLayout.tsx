@@ -3,23 +3,23 @@ import FormTemplateBuilderSitePanel from "@containers/editor/FormTemplateBuilder
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormTemplateProvider } from "@containers/editor/context/FormTemplateContext";
+import { FormTemplateBuilderHeader } from "../components";
 
 const FormTemplateBuilderLayout: React.FC = ({ children }) => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="grid md:grid-cols-sideFormMd lg:grid-cols-sideFormLg min-h-screen">
-        {/* <Header /> */}
-        {/* <CartCounterButton /> */}
-        <FormConfigProvider>
-          <FormTemplateProvider>
+      <FormConfigProvider>
+        <FormTemplateProvider>
+          <FormTemplateBuilderHeader />
+          <div className="grid md:grid-cols-sideFormMd lg:grid-cols-sideFormLg min-h-screen">
             <div className="block bg-white h-full shadow-100">
               <FormTemplateBuilderSitePanel />
             </div>
 
             <div>{children}</div>
-          </FormTemplateProvider>
-        </FormConfigProvider>
-      </div>
+          </div>
+        </FormTemplateProvider>
+      </FormConfigProvider>
     </DndProvider>
   );
 };

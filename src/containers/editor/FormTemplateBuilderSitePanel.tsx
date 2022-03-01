@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useDrag } from "react-dnd";
 import {
   useFormTemplateAction,
@@ -17,6 +17,8 @@ import {
 } from "./configurationForms";
 import { ClickableText } from "@components/buttons";
 import { blankSection } from "./helpers";
+import Icon from "@components/icons/Icon";
+import { IconType } from "@components/icons/iconList";
 
 type OwnProps = {};
 
@@ -67,13 +69,12 @@ const FormTemplateBuilderSitePanel: FC<Props> = () => {
           </>
         ) : (
           <>
-            <div className="text-center font-bold">Components</div>
-            <div className="grid gap-4 mb-4">
+            <div className="mb-2 text-gray-500 ">Layout elements</div>
+            <div className="grid gap-4 mb-4 grid-cols-2">
               <SectionBox />
-            </div>
-            <div className="grid gap-4 mb-4">
               <LayoutBox />
             </div>
+            <div className="mb-2 text-gray-500 ">Fields elements</div>
             <div className="grid grid-cols-2 gap-4">{fieldBoxes}</div>
           </>
         )}
@@ -156,9 +157,12 @@ const FieldBox = ({ fieldType }: { fieldType: FieldType }) => {
   }
 
   return (
-    <DraggableBox payload={blankField} type={DraggableEditorType.LAYOUT}>
-      {blankField.field}
-    </DraggableBox>
+    <DraggableBox
+      payload={blankField}
+      type={DraggableEditorType.LAYOUT}
+      label={blankField.field}
+      icon="tool"
+    />
   );
 };
 
@@ -168,9 +172,12 @@ const SectionBox = () => {
   }
 
   return (
-    <DraggableBox payload={blankSection} type={DraggableEditorType.SECTION}>
-      Section
-    </DraggableBox>
+    <DraggableBox
+      payload={blankSection}
+      type={DraggableEditorType.SECTION}
+      label="Section"
+      icon="card"
+    />
   );
 };
 const LayoutBox = () => {
@@ -179,20 +186,25 @@ const LayoutBox = () => {
   }
 
   return (
-    <DraggableBox payload={blankLayout} type={DraggableEditorType.LAYOUT}>
-      Layout
-    </DraggableBox>
+    <DraggableBox
+      payload={blankLayout}
+      type={DraggableEditorType.LAYOUT}
+      label="Layout"
+      icon="eye"
+    />
   );
 };
 
 const DraggableBox = ({
   payload,
   type,
-  children,
+  icon,
+  label,
 }: {
   payload: FormConfig[number] | SectionConfig;
   type: DraggableEditorType;
-  children: ReactNode;
+  label: string;
+  icon: IconType;
 }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type,
@@ -212,9 +224,10 @@ const DraggableBox = ({
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
       }}
-      className="p-5 mb-2 border-2 text-center"
+      className="p-4 mb-2 bg-gray-50 border-2 rounded-md text-center flex items-center justify-center"
     >
-      {children}
+      <Icon icon={icon} className="mr-2 w-5 h-5" />
+      <span>{label}</span>
     </div>
   );
 };

@@ -14,6 +14,7 @@ const NumberField: FC<Props> = ({ name, actions, ...rest }) => {
     name: getFieldName("number", name),
     type: "number",
   });
+
   return (
     <FieldActionsWrapper actions={actions}>
       <Input

@@ -27,7 +27,7 @@ module.exports = {
         "1/2fr": "1fr 2fr",
         layout: "auto minmax(900px, 1fr)",
         sideFormMd: "350px 1fr",
-        sideFormLg: "400px 1fr",
+        sideFormLg: "380px 1fr",
       },
       zIndex: {
         "-1": "-1",
@@ -45,6 +45,7 @@ module.exports = {
         dark: withOpacity("--color-dark"),
         accent: withOpacity("--color-accent"),
         "accent-hover": withOpacity("--color-accent-hover"),
+        "accent-100": withOpacity("--color-accent-100"),
         "accent-300": withOpacity("--color-accent-300"),
         "accent-400": withOpacity("--color-accent-400"),
         "accent-500": withOpacity("--color-accent-500"),

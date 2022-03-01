@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ReactNode } from "react";
 import { useDrop } from "react-dnd";
-import { FieldConfig, FormConfigPosition } from "src/types";
+import { FormConfigPosition } from "src/types";
 import { OnDrop } from "../context";
 import { DraggableEditorType } from "../types";
 
@@ -36,7 +36,7 @@ const DropSpace = ({
         "opacity-30 transition-all flex justify-center ",
         { "border-2 border-accent border-dashed": isOver },
         {
-          "bg-gray-300": isFieldVariant && !isOver,
+          "bg-gray-": isFieldVariant && !isOver,
           "bg-green-200 p-3": isFieldVariant && isOver,
         },
         {

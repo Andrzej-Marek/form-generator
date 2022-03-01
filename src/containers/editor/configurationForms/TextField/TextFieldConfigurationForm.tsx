@@ -6,10 +6,14 @@ import {
   useFormTemplateState,
 } from "@containers/editor/context";
 import { FormBody, FormWrapper } from "@layout/form";
-import { FC, useMemo, useState } from "react";
+import Yup from "@lib/validation";
+import { FC, useMemo } from "react";
 import { StringSchemaRules, TextFieldConfig } from "src/types";
-import { ValidationRuleConfigField } from "../components";
-import ValidationBooleanRuleConfigField from "../components/ValidationBooleanRuleConfigField/ValidationBooleanRuleConfigField";
+import {
+  NameConfigField,
+  ValidationBooleanRuleConfigField,
+  ValidationRuleConfigField,
+} from "../components";
 import { toFormModalValidation } from "../helpers";
 import { FieldConfigurationFormModel } from "../types";
 
@@ -30,7 +34,6 @@ const TextFieldConfigurationForm: FC<Props> = ({
   fieldConfig,
 }) => {
   const { fieldConfigPosition: position } = useFormTemplateState();
-  // const [position] = useState(fieldConfigPosition);
   const { updateField, updateFieldSchema, resetValidationRule } =
     useFormConfigContext();
 
@@ -62,42 +65,19 @@ const TextFieldConfigurationForm: FC<Props> = ({
     [fieldConfig]
   );
 
-  const resetToInitialValues = () => {
-    console.log("API CALL TO BE");
-    // const initial = resetFieldToInitial(index, subIndex);
-
-    // if (initial.field !== "text") {
-    //   throw new Error("Invalid initial");
-    // }
-
-    // return initial;
-  };
-
   return (
     <Form<FormModel>
       initialValues={formInitialValues}
       onSubmit={(value) => console.log({ value })}
       enableReinitialize
-      // validationSchema={validationSchema}
+      validationSchema={schema}
     >
-      {({ resetForm, values }) => (
+      {() => (
         <FormWrapper>
           <FormBody columns={2}>
-            <TextField
-              name="name"
-              label="Name"
-              size="small"
-              placeholder="Field name"
-              infoTooltip="You have to specify a name to have a uniq value of field"
-              onChange={(event) => onUpdateField("name", event.target.value)}
+            <NameConfigField
+              onChange={(value) => onUpdateField("name", value)}
             />
-            {/* <TextField
-              name="value"
-              label="Initial value"
-              size="small"
-              placeholder="Initial value"
-              onChange={(event) => onUpdateField("value", event.target.value)}
-            /> */}
           </FormBody>
           <TextField
             name="label"
@@ -118,14 +98,14 @@ const TextFieldConfigurationForm: FC<Props> = ({
           <div className="pb-5 text-center">VALIDATION CONFIG!!!!</div>
 
           <ValidationRuleConfigField
-            label="Min value"
+            label="Min length"
             fieldKey="min"
             type="number"
             onChangeFieldSchema={onUpdateFieldSchema}
             onValidationCheck={onValidationCheck}
           />
           <ValidationRuleConfigField
-            label="Max value"
+            label="Max length"
             fieldKey="max"
             onChangeFieldSchema={onUpdateFieldSchema}
             type="number"
@@ -155,6 +135,14 @@ const TextFieldConfigurationForm: FC<Props> = ({
     </Form>
   );
 };
+
+const schema = Yup.object({
+  name: Yup.string()
+    .matches(/^[aA-zZ-\s]+$/, "Only alphabets are allowed for this field ")
+    .required(),
+  placeholder: Yup.string().trim(),
+  label: Yup.string().trim(),
+});
 
 const configToInitialValues = (config: TextFieldConfig): FormModel => ({
   field: "text",

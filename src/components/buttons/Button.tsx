@@ -16,7 +16,7 @@ const classes = {
     "bg-accent text-light border border-transparent hover:bg-accent-hover",
   custom: "border border-transparent",
   outline:
-    "border border-border-400 bg-transparent text-body hover:text-light hover:bg-accent hover:border-accent",
+    "border border-accent text-accent bg-transparent hover:text-light hover:bg-accent hover:border-accent",
   cancelOutline:
     "border border-border-400 border-red-500 bg-transparent text-red-500 text-body hover:text-light hover:bg-red-500 hover:border-red-500 focus:ring-red-500",
   loading:
