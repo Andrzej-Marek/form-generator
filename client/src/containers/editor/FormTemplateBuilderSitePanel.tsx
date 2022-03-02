@@ -19,6 +19,7 @@ import { ClickableText } from "@components/buttons";
 import { blankSection } from "./helpers";
 import Icon from "@components/icons/Icon";
 import { IconType } from "@components/icons/iconList";
+import Counter from "@components/form/Counter";
 
 type OwnProps = {};
 
@@ -161,7 +162,7 @@ const FieldBox = ({ fieldType }: { fieldType: FieldType }) => {
       payload={blankField}
       type={DraggableEditorType.LAYOUT}
       label={blankField.field}
-      icon="tool"
+      icon="calendar"
     />
   );
 };
@@ -224,10 +225,10 @@ const DraggableBox = ({
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
       }}
-      className="p-4 mb-2 bg-gray-50 border-2 rounded-md text-center flex items-center justify-center"
+      className="py-5 pl-5 mb-2 bg-gray-50 border-2 rounded-md text-center flex items-center"
     >
-      <Icon icon={icon} className="mr-2 w-5 h-5" />
-      <span>{label}</span>
+      <Icon icon={icon} className="mr-4 w-5 h-5" />
+      <span className="font-medium text-sm">{label}</span>
     </div>
   );
 };

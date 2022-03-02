@@ -1,4 +1,4 @@
-import { Form, NumberField } from "@components/form";
+import { CounterField, Form } from "@components/form";
 import {
   FieldConfigPositionInfo,
   useFormConfigContext,
@@ -20,7 +20,7 @@ const LayoutConfigurationForm: FC<Props> = ({
 }) => {
   const { updateLayoutConfig } = useFormConfigContext();
 
-  const onUpdateField = (field: keyof LayoutConfig, value: string) => {
+  const onUpdateField = (field: keyof LayoutConfig, value: string | number) => {
     updateLayoutConfig(field, value, fieldConfigPosition);
   };
 
@@ -49,12 +49,13 @@ const LayoutConfigurationForm: FC<Props> = ({
       {({ resetForm }) => (
         <FormWrapper>
           {/* //TODO: MAKE STEP FIELD INSTEAD OF NUMBER */}
-          <NumberField
+          <CounterField
             name="columns"
             label="Columns"
-            size="small"
-            placeholder="Please insert a columns number"
-            onChange={(event) => onUpdateField("columns", event.target.value)}
+            onChange={(counter) => onUpdateField("columns", counter)}
+            infoTooltip="You can specify how many columns you need"
+            min={1}
+            max={4}
           />
 
           <button type="submit">SAVE</button>

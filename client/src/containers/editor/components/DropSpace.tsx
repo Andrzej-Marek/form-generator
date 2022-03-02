@@ -33,10 +33,10 @@ const DropSpace = ({
     <div
       ref={drop}
       className={classNames(
-        "opacity-30 transition-all flex justify-center ",
+        "opacity-30 transition-all flex justify-center ease-linear",
         { "border-2 border-accent border-dashed": isOver },
         {
-          "bg-gray-": isFieldVariant && !isOver,
+          "bg-gray-300": isFieldVariant && !isOver,
           "bg-green-200 p-3": isFieldVariant && isOver,
         },
         {

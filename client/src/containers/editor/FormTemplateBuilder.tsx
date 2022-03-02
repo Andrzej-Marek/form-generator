@@ -1,11 +1,9 @@
 import { Form } from "@components/form";
 import SectionController from "@components/form/controllers/SectionController";
 import { FormWrapper } from "@layout/form";
-import { FC, Fragment, useEffect, useMemo } from "react";
-import { ModalView, useModalAction, useModalState } from "src/context";
+import { FC, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
 import { FieldConfigPosition, FieldType } from "src/types";
-import { DropSpace } from "./components";
 import { useFormTemplateAction, useFormTemplateState } from "./context";
 import { useFormConfigContext } from "./context/formConfig/FormConfigContext";
 

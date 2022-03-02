@@ -6,6 +6,8 @@ import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { SectionConfig } from "src/types";
 import { TypeController } from ".";
+import { CounterField } from "..";
+import Counter from "../Counter";
 
 type OwnProps = {
   config: SectionConfig;
