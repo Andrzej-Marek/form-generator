@@ -1,6 +1,6 @@
 {
-  "name": "server",
-  "version": "0.0.1",
+  "name": "@package/server",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@package/common": "1.0.0",
     "@nestjs/apollo": "^10.0.6",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",

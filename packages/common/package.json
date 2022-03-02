@@ -1,0 +1,14 @@
+{
+  "name": "@package/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "gen": "graphql-codegen --config codegen.yml"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.4"
+  }
+}

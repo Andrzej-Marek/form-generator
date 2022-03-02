@@ -1,0 +1,20 @@
+{
+	"private": true,
+	"scripts": {
+		"start:client:dev": "yarn workspace @package/client dev",
+		"start:server:dev": "yarn workspace @package/server start:dev",
+		"dev": "concurrently \"npm run start:client:dev\" \"npm run start:server:dev\""
+	},
+	"workspaces": {
+		"packages": [
+			"packages/*"
+		],
+		"nohoist": [
+			"**/@nestjs",
+			"**/@nestjs/**"
+		]
+	},
+	"devDependencies": {
+		"concurrently": "^7.0.0"
+	}
+}

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { TextFieldConfig } from '@package/common';
 // import { InjectRepository } from '@nestjs/typeorm';
 // import { Repository } from 'typeorm';
 // import { User } from '../../entity/User.entity';
@@ -6,8 +7,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-  constructor() // @InjectRepository(User)
-  // private readonly userRepository: Repository<User>,
+  constructor() // private readonly userRepository: Repository<User>, // @InjectRepository(User)
   {}
 
   // async getByUserId(userId: PublicId): Promise<User> {
