@@ -7,6 +7,6 @@ import { FormTemplateService } from './formTemplate.service';
 @Module({
   imports: [TypeOrmModule.forFeature([FormTemplate])],
   providers: [FormTemplateResolver, FormTemplateService],
-  exports: [],
+  exports: [FormTemplateService],
 })
 export class FormTemplateModule {}

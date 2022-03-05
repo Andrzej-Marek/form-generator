@@ -1,10 +1,13 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { User } from '../entity/User.entity';
+import { MyNotProtectedSession, MySession } from 'src/types';
 import { MyContext } from '../types/myContext';
 
 export const Session = createParamDecorator(
-  (_data: unknown, context: ExecutionContext): Promise<User> => {
+  (
+    _data: unknown,
+    context: ExecutionContext,
+  ): Promise<MySession | MyNotProtectedSession> => {
     const ctx = GqlExecutionContext.create(context).getContext() as MyContext;
 
     // @ts-ignore

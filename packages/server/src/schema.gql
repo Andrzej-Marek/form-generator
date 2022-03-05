@@ -18,6 +18,7 @@ type FormTemplate {
   createdAt: DateTime!
   id: String!
   label: String
+  published: Boolean!
   template: String!
   updatedAt: DateTime!
   user: User
@@ -27,11 +28,15 @@ type Mutation {
   createFormTemplate(input: CreateFormTemplateInput!): FormTemplate!
   deleteFormTemplate(id: String!): Boolean!
   login(email: String!, password: String!): User!
+  publishFormTemplate(id: String!): FormTemplate!
   register(email: String!, password: String!): User!
   saveFormTemplate(input: SaveFormTemplateInput!): FormTemplate!
+  unPublishFormTemplate(id: String!): FormTemplate!
 }
 
 type Query {
+  canEditFormTemplate(id: String!): Boolean!
+  collectFormTemplates: [FormTemplate!]!
   getFormTemplate(id: String!): FormTemplate!
   hello: String!
   me: User!

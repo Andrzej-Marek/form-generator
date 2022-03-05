@@ -4,10 +4,13 @@ import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { AuthErrorCode } from './errorCodes';
 import { User } from 'src/entity';
+import { MySession } from 'src/types';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UserService) {}
+  constructor(
+    private usersService: UserService, // private formTemplateService: FormTemplateService,
+  ) {}
 
   async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await suppressNotFoundFailure(
@@ -61,8 +64,17 @@ export class AuthService {
     return rest as User;
   }
 
-  async login(id: User['id']) {
-    console.log('LIGIN');
-    return await this.usersService.getById(id);
+  async login({ userId, formTemplatesIds }: MySession): Promise<User> {
+    const user = await this.usersService.getById(userId);
+
+    // NOTE: Uncomment if we want auto assign afer login
+    // if (formTemplatesIds && !!formTemplatesIds.length) {
+    //   await this.formTemplateService.assignCreatedFormsAsNotAuthUser(
+    //     formTemplatesIds,
+    //     user,
+    //   );
+    // }
+
+    return user;
   }
 }

@@ -14,16 +14,18 @@ import { User } from './User.entity';
 
 export type InsertFormTemplate = Omit<
   FormTemplate,
-  InsertOmitFields | 'convertToFormTemplate' | 'user'
+  InsertOmitFields | 'convertToFormTemplate' | 'user' | 'published'
 >;
 
 @ObjectType()
 @Entity()
 export class FormTemplate extends BaseEntity {
-  constructor(input: InsertFormTemplate, user: User) {
+  constructor(input: InsertFormTemplate, user?: User) {
     super();
     Object.assign(this, input);
-    this.user = user;
+    if (user) {
+      this.user = user;
+    }
   }
 
   @Field(() => String)
@@ -38,9 +40,13 @@ export class FormTemplate extends BaseEntity {
   @Column({ nullable: true })
   label?: string;
 
+  @Field()
+  @Column({ default: false })
+  published!: boolean;
+
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.formTemplates, { nullable: true })
-  user!: User;
+  user?: User;
 
   @Field(() => Date)
   @CreateDateColumn({

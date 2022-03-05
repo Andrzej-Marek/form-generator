@@ -29,7 +29,7 @@ export class AuthResolver {
     @Args('password') _password: string,
     @Session() session: MySession,
   ) {
-    return await this.authService.login(session.userId);
+    return await this.authService.login(session);
   }
 
   @Mutation(() => User)
