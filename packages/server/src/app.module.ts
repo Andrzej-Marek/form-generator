@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './services/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormTemplateModule } from './services/formTemplate/formTemplate.module';
+import { AuthModule } from './services/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FormTemplateModule } from './services/formTemplate/formTemplate.module'
         credential: true,
       },
     }),
+    AuthModule,
     UserModule,
     FormTemplateModule,
   ],

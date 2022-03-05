@@ -1,0 +1,10 @@
+input SaveFormTemplateInput {
+  id: String!
+  title: String
+  template: String!
+}
+
+input CreateFormTemplateInput {
+  title: String
+  template: String!
+}

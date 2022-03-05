@@ -1,0 +1,60 @@
+import { Field, ObjectType } from '@nestjs/graphql';
+import { FormBuilderConfig } from '@package/common';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { InsertOmitFields } from './types';
+import { User } from './User.entity';
+
+export type InsertFormTemplate = Omit<
+  FormTemplate,
+  InsertOmitFields | 'convertToFormTemplate' | 'user'
+>;
+
+@ObjectType()
+@Entity()
+export class FormTemplate extends BaseEntity {
+  constructor(input: InsertFormTemplate, user: User) {
+    super();
+    Object.assign(this, input);
+    this.user = user;
+  }
+
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id!: string & { __brand: 'formTemplateId' };
+
+  @Field()
+  @Column({ type: 'jsonb' })
+  template!: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  label?: string;
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.formTemplates, { nullable: true })
+  user!: User;
+
+  @Field(() => Date)
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createdAt!: Date;
+
+  @Field(() => Date)
+  @UpdateDateColumn({
+    type: 'timestamptz',
+  })
+  updatedAt!: Date;
+
+  convertToFormTemplate(): FormBuilderConfig {
+    return JSON.parse(this.template);
+  }
+}

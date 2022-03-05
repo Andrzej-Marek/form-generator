@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],  
+    "moduleResolution": "node",
+    "baseUrl": "./",
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -9,13 +12,14 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
   }
 }

@@ -1,7 +1,7 @@
 import FieldActionsWrapper, {
   FieldActions,
 } from "@components/form/components/FieldActionsWrapper/FieldActionsWrapper";
-import { useFormConfigContext } from "@containers/editor/context";
+import { useFormConfigContext } from "@containers/formTemplateBuilder/context";
 import { FC } from "react";
 
 type OwnProps = {

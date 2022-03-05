@@ -1,6 +1,6 @@
-import { DropSpace } from "@containers/editor/components";
-import { OnDrop } from "@containers/editor/context/formConfig/FormConfigContext";
-import { FormTemplateBuilderActions } from "@containers/editor/FormTemplateBuilder";
+import { DropSpace } from "@containers/formTemplateBuilder/components";
+import { OnDrop } from "@containers/formTemplateBuilder/context/formConfig/FormConfigContext";
+import { FormTemplateBuilderActions } from "@containers/formTemplateBuilder/FormTemplateBuilder";
 import { FormBody } from "@layout/form";
 import { useMemo } from "react";
 import { FormConfig, FormConfigPosition, LayoutConfig } from "src/types";

@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthProvider } from '@package/common';
+import { User } from 'src/entity';
 import { Repository } from 'typeorm';
-import { User } from '../../entity/User.entity';
-import { PublicId } from '../../types/publicId';
+import { UserErrorCode } from './errorCodes';
 
 @Injectable()
 export class UserService {
@@ -11,19 +12,22 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getByUserId(userId: PublicId): Promise<User> {
+  async getById(id: User['id']): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { userId },
+      where: { id },
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(
+        `User with id ${id} not found`,
+        UserErrorCode.NOT_FOUND,
+      );
     }
 
     return user;
   }
 
-  async getByEmail(email: string): Promise<User> {
+  async getByEmail(email: User['email']): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
@@ -36,14 +40,10 @@ export class UserService {
   async createUser(
     email: string,
     hashedPassword: string,
+    provider: AuthProvider,
     salt: string,
   ): Promise<User> {
-    const user = this.userRepository.create({
-      email,
-      password: hashedPassword,
-      salt,
-    });
-
+    const user = new User({ email, password: hashedPassword, provider, salt });
     return await this.userRepository.save(user);
   }
 }

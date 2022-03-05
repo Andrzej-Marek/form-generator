@@ -1,14 +1,7 @@
-import FormTemplateBuilder from "@containers/editor/FormTemplateBuilder";
-import FormTemplateBuilderLayout from "@containers/editor/layout/FormTemplateBuilderLayout";
+import FormTemplateBuilderPage from "@containers/formTemplateBuilder/FormTemplateBuilderPage";
 
-const Editor = () => {
-  return (
-    <FormTemplateBuilderLayout>
-      <div className="m-5 mt-10">
-        <FormTemplateBuilder />
-      </div>
-    </FormTemplateBuilderLayout>
-  );
+const Builder = () => {
+  return <FormTemplateBuilderPage />;
 };
 
-export default Editor;
+export default Builder;

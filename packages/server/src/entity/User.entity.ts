@@ -1,18 +1,29 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
-import { PublicId } from '../types/publicId';
-import { DateFields } from './Common';
+import { AuthProvider } from '@package/common';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { BaseEntity } from './base/BaseEntity';
+import { FormTemplate } from './FormTemplate.entity';
+import { InsertOmitFields } from './types';
 
+export type InsertUser = Omit<User, InsertOmitFields | 'formTemplates'>;
 @ObjectType()
 @Entity()
-export class User extends DateFields {
-  @PrimaryGeneratedColumn()
-  id!: number;
+export class User extends BaseEntity {
+  constructor(input: InsertUser) {
+    super();
+    Object.assign(this, input);
+  }
 
-  @Field()
-  @Column()
-  @Generated('uuid')
-  userId!: PublicId;
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id!: string & { __brand: 'userId' };
 
   @Field()
   @Column()
@@ -23,4 +34,22 @@ export class User extends DateFields {
 
   @Column()
   salt!: string;
+
+  @Column()
+  provider!: AuthProvider;
+
+  @Field(() => Date)
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createdAt!: Date;
+
+  @Field(() => Date)
+  @UpdateDateColumn({
+    type: 'timestamptz',
+  })
+  updatedAt!: Date;
+
+  @OneToMany(() => FormTemplate, (formTemplate) => formTemplate.user)
+  formTemplates!: FormTemplate[];
 }

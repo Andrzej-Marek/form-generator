@@ -1,14 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PublicId } from './publicId';
+import { User } from 'src/entity/User.entity';
 
 @ObjectType()
 export class MySession {
-  @Field()
-  userId!: PublicId;
-
-  @Field({ nullable: true })
-  shopId?: PublicId;
-
-  @Field({ nullable: true })
-  cartId?: PublicId;
+  @Field(() => String)
+  userId!: User['id'];
 }

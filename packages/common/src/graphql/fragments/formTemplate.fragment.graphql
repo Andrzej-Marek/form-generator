@@ -1,0 +1,8 @@
+fragment FormTemplateFields on FormTemplate {
+  id
+  template
+  label
+  template
+  createdAt
+  updatedAt
+}

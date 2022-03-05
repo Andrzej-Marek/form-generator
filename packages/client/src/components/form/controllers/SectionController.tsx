@@ -1,7 +1,10 @@
 import FormSectionCart from "@components/carts/FormSectionCart/FormSectionCart";
-import { DropSpace, SectionDropSpace } from "@containers/editor/components";
-import { OnDrop, OnSectionDrop } from "@containers/editor/context";
-import { FormTemplateBuilderActions } from "@containers/editor/FormTemplateBuilder";
+import {
+  DropSpace,
+  SectionDropSpace,
+} from "@containers/formTemplateBuilder/components";
+import { OnDrop, OnSectionDrop } from "@containers/formTemplateBuilder/context";
+import { FormTemplateBuilderActions } from "@containers/formTemplateBuilder/FormTemplateBuilder";
 import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { SectionConfig } from "src/types";

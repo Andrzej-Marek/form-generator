@@ -1,0 +1,16 @@
+mutation SaveFormTemplate($input: SaveFormTemplateInput!) {
+  saveFormTemplate(input: $input) {
+    ...FormTemplateFields
+  }
+}
+mutation CreateFormTemplate($input: CreateFormTemplateInput!) {
+  createFormTemplate(input: $input) {
+    ...FormTemplateFields
+  }
+}
+
+query GetFormTemplate($id: String!) {
+  getFormTemplate(id: $id) {
+    ...FormTemplateFields
+  }
+}
