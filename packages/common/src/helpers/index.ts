@@ -1,1 +1,1 @@
-export { parseStringifyFormTemplate } from "./parseStringifyFormTemplate";
+export * from "./form";

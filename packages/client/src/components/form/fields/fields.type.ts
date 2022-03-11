@@ -3,4 +3,5 @@ import { FieldActions } from "../components/FieldActionsWrapper/FieldActionsWrap
 export type FieldProps = {
   name: string;
   actions?: FieldActions;
+  withActionWrapper?: boolean;
 };

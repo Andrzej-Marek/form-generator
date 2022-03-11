@@ -1,34 +1,25 @@
-import { useGetFormTemplateQuery } from "@package/common";
+import { Button } from "@components/buttons";
 import type { NextPage } from "next";
+import Router from "next/router";
 import Login from "src/containers/Login";
+import { formTemplateRoutes } from "src/routes";
 
 const Home: NextPage = () => {
-  const { data, loading } = useGetFormTemplateQuery({
-    variables: { id: "674a1578-cc1b-4778-aadc-539bec68b3ef" },
-  });
-
-  console.log({ data, loading });
-
+  const CURRENT_WORKING_FORM_ID = "22b4f03b-1423-4377-a1ad-617e5d14d6f9";
   return (
     <main className="flex-1">
-      <br />
-      <br />
-      <br />
+      <Button
+        onClick={() =>
+          Router.push(formTemplateRoutes.template(CURRENT_WORKING_FORM_ID))
+        }
+      >
+        Form builder
+      </Button>
+      <Button onClick={() => Router.push(formTemplateRoutes.draftBuilder)}>
+        Form draft
+      </Button>
+
       <Login />
-      <div className="grid grid-cols-3">
-        <div>HELLO</div>
-        <div>HELLO</div>
-        <div>HELLO</div>
-      </div>
-
-      <div className="grid md:grid-cols-sideFormMd lg:grid-cols-sideFormLg">
-        {/* <Header /> */}
-        {/* <CartCounterButton /> */}
-        <div>Site panel2</div>
-
-        <div>HELLO</div>
-        {/* <MobileNavigation /> */}
-      </div>
     </main>
   );
 };

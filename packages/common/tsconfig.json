@@ -1,33 +1,26 @@
-
-   
 {
-	"compilerOptions": {
-	  "baseUrl": ".",
-	  "outDir": "dist",
-	  "module": "esnext",
-	  "target": "es5",
-	  "lib": ["es6", "dom", "esnext.asynciterable"],
-	  "sourceMap": true,
-	  "jsx": "react",
-	  "moduleResolution": "node",
-	  "rootDir": "src",
-	  "forceConsistentCasingInFileNames": true,
-	  "noImplicitReturns": true,
-	  "noImplicitThis": true,
-	  "noImplicitAny": true,
-	  "strictNullChecks": true,
-	  "suppressImplicitAnyIndexErrors": true,
-	  "declaration": true,
-	  "noUnusedLocals": true,
-	  "skipLibCheck": true
-	},
-	"exclude": [
-	  "node_modules",
-	  "build",
-	  "scripts",
-	  "acceptance-tests",
-	  "webpack",
-	  "jest",
-	  "src/setupTests.ts"
-	]
-      }
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "declaration": true,
+
+    "removeComments": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": false,
+    "skipLibCheck": true,
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
+}

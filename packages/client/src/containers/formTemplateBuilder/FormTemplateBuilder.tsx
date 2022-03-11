@@ -2,11 +2,15 @@ import { Form } from "@components/form";
 import SectionController from "@components/form/controllers/SectionController";
 import { FormTemplateLoader } from "@components/loaders";
 import { FormWrapper } from "@layout/form";
-import { FC, useMemo } from "react";
+import { FormTemplate } from "@package/common";
+import { FC, useEffect, useMemo } from "react";
 import { buildYupSchema } from "src/helpers/createYupSchema";
+import { useRouterParams } from "src/hooks/router";
 import { FieldConfigPosition, FieldType } from "src/types";
 import { useFormTemplateAction, useFormTemplateState } from "./context";
 import { useFormConfigContext } from "./context/formConfig/FormConfigContext";
+import Router from "next/router";
+import { formTemplateRoutes } from "src/routes";
 
 type OwnProps = {};
 
@@ -21,6 +25,7 @@ export type FormTemplateBuilderActions = {
 };
 
 const FormTemplateBuilder: FC<Props> = () => {
+  const { formTemplateId } = useRouterParams<{ formTemplateId: string }>();
   const {
     config,
     onDrop,
@@ -28,10 +33,18 @@ const FormTemplateBuilder: FC<Props> = () => {
     deleteField,
     deleteLayout,
     isFetchingFormTemplate,
+    formTemplate,
   } = useFormConfigContext();
   const { fieldConfigPosition } = useFormTemplateState();
   const { setFieldConfigPosition, setView, setSectionConfigPosition } =
     useFormTemplateAction();
+
+  useEffect(() => {
+    // After draft is saved redirect to template builder
+    if (!formTemplateId && formTemplate?.id) {
+      Router.push(formTemplateRoutes.template(formTemplate.id));
+    }
+  }, [formTemplateId, formTemplate]);
 
   // Action to left configure panel
   const actions: FormTemplateBuilderActions = {
@@ -85,15 +98,13 @@ const FormTemplateBuilder: FC<Props> = () => {
   }
 
   return (
-    <>
-      <Form
-        initialValues={{}}
-        onSubmit={(value) => console.log({ value })}
-        validationSchema={validationSchema}
-      >
-        <FormWrapper>{sections}</FormWrapper>
-      </Form>
-    </>
+    <Form
+      initialValues={{}}
+      onSubmit={(value) => console.log({ value })}
+      validationSchema={validationSchema}
+    >
+      <FormWrapper>{sections}</FormWrapper>
+    </Form>
   );
 };
 

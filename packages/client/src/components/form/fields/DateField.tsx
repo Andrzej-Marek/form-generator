@@ -26,31 +26,34 @@ const DateField: FC<Props> = ({
   maxDate,
   minDate,
   dateFormat,
+  withActionWrapper,
 }) => {
   const [field, meta, { setValue }] = useField<Date | undefined>({
     name: getFieldName("date", name),
     type: "date",
   });
 
-  return (
-    <FieldActionsWrapper actions={actions}>
-      <DatePicker
-        selected={field.value}
-        dateFormat={dateFormat}
-        onChange={(date) => {
-          const value = date || undefined;
-          setValue(value);
-          onChange?.(value);
-        }}
-        customInput={
-          <InputRaw name={name} {...inputProps} error={meta.error} />
-        }
-        placeholderText={inputProps?.placeholder}
-        minDate={minDate}
-        maxDate={maxDate}
-      />
-    </FieldActionsWrapper>
+  const input = (
+    <DatePicker
+      selected={field.value}
+      dateFormat={dateFormat}
+      onChange={(date) => {
+        const value = date || undefined;
+        setValue(value);
+        onChange?.(value);
+      }}
+      customInput={<InputRaw name={name} {...inputProps} error={meta.error} />}
+      placeholderText={inputProps?.placeholder}
+      minDate={minDate}
+      maxDate={maxDate}
+    />
   );
+
+  if (withActionWrapper) {
+    return <FieldActionsWrapper actions={actions}>{input}</FieldActionsWrapper>;
+  }
+
+  return input;
 };
 
 export default DateField;

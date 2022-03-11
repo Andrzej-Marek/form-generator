@@ -1,24 +1,21 @@
 import FieldActionsWrapper, {
   FieldActions,
 } from "@components/form/components/FieldActionsWrapper/FieldActionsWrapper";
-import { useFormConfigContext } from "@containers/formTemplateBuilder/context";
 import { FC } from "react";
+import { SectionConfig } from "src/types";
+import Cart from "../Cart";
 
 type OwnProps = {
-  actions: FieldActions;
-  sectionIndex: number;
+  actions?: FieldActions;
+  sectionConfig: SectionConfig;
 };
 
 type Props = OwnProps;
 
-const FormSectionCart: FC<Props> = ({ sectionIndex, children, actions }) => {
-  const { getSectionConfigByIndex } = useFormConfigContext();
-
-  const sectionConfig = getSectionConfigByIndex(sectionIndex);
-
+const FormSectionCart: FC<Props> = ({ sectionConfig, children, actions }) => {
   return (
     <FieldActionsWrapper actions={actions}>
-      <div className="p-5 mb-5 rounded-md shadow-400 bg-white">
+      <Cart>
         {(sectionConfig.title || sectionConfig.subTitle) && (
           <div className="mb-5">
             {sectionConfig.title && (
@@ -32,7 +29,7 @@ const FormSectionCart: FC<Props> = ({ sectionIndex, children, actions }) => {
           </div>
         )}
         {children}
-      </div>
+      </Cart>
     </FieldActionsWrapper>
   );
 };

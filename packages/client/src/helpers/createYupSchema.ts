@@ -1,6 +1,7 @@
 import { Schema } from "src/types/formValidation";
 import { FormBuilderConfig } from "src/types";
 import * as yup from "yup";
+import { FormTemplateFieldsFragment } from "@package/common";
 
 // Here we're mapping whole fields config to mach config and we take a schema rules
 // We can make nested object, we have to add name for layout field

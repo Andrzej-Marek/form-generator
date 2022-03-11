@@ -14,6 +14,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FormResponse {
+  createdAt: DateTime!
+  formVersion: Float!
+  id: String!
+  response: String!
+  updatedAt: DateTime!
+}
+
 type FormTemplate {
   createdAt: DateTime!
   id: String!
@@ -22,6 +30,7 @@ type FormTemplate {
   template: String!
   updatedAt: DateTime!
   user: User
+  version: Float!
 }
 
 type Mutation {
@@ -31,11 +40,13 @@ type Mutation {
   publishFormTemplate(id: String!): FormTemplate!
   register(email: String!, password: String!): User!
   saveFormTemplate(input: SaveFormTemplateInput!): FormTemplate!
+  sendFormResponse(input: SendFormResponseInput!): FormResponse!
   unPublishFormTemplate(id: String!): FormTemplate!
 }
 
 type Query {
   canEditFormTemplate(id: String!): Boolean!
+  collectFormResponses(formTemplateId: String!): [FormResponse!]!
   collectFormTemplates: [FormTemplate!]!
   getFormTemplate(id: String!): FormTemplate!
   hello: String!
@@ -49,6 +60,14 @@ input SaveFormTemplateInput {
 
   """JSON of form template"""
   template: String!
+}
+
+input SendFormResponseInput {
+  formTemplateId: String!
+  formVersion: Float!
+
+  """JSON of form template"""
+  response: String!
 }
 
 type User {

@@ -19,6 +19,8 @@ export type FieldType = typeof FIELD_TYPES[number];
 export type FormConfigTypes = FormConfigs["type"];
 
 interface GenericFieldTypeConfig<Value, SchemaType = Schema> {
+  // We have id when someone will save a form (auto added on BE)
+  id?: string;
   field: FieldType;
   name: string;
   label?: string;
@@ -118,15 +120,6 @@ export type SectionConfig = {
 export type FormBuilderConfig = Array<SectionConfig>;
 
 export type FormConfigs = FieldConfig | LayoutConfig | EmptyConfig;
-
-export const isFieldConfig = (config: FormConfigs): config is FieldConfig =>
-  (config as FieldConfig).type === "field";
-
-export const isLayoutConfig = (config: FormConfigs): config is LayoutConfig =>
-  (config as LayoutConfig).type === "layout";
-
-export const isEmptyConfig = (config: FormConfigs): config is EmptyConfig =>
-  (config as EmptyConfig).type === "empty";
 
 export type FormConfigPosition = {
   sectionIndex: number;

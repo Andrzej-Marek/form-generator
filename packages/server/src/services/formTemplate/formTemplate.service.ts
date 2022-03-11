@@ -7,11 +7,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entity';
 import { FormTemplate } from 'src/entity/FormTemplate.entity';
-import { MyContext, MyNotProtectedSession, MySession } from 'src/types';
+import { MyContext, MyNotProtectedSession } from 'src/types';
 import { suppressNotFoundFailure } from 'src/utils';
 import { FindConditions, In, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { UserService } from '../user/user.service';
 import { FormTemplateErrorCode } from './errorCodes';
+import { addIdToEachField } from './helpers/addIdFieldToEachField';
 import { CreateFormTemplateInput, SaveFormTemplateInput } from './input';
 
 @Injectable()
@@ -97,7 +99,10 @@ export class FormTemplateService {
       ? await suppressNotFoundFailure(this.userService.getById(userId))
       : undefined;
 
-    const formTemplate = new FormTemplate(input, user);
+    const formTemplate = new FormTemplate(
+      { ...input, template: addIdToEachField(input.template) },
+      user,
+    );
     const createdFormTemplate = await this.save(formTemplate);
 
     if (!userId) {
@@ -115,14 +120,29 @@ export class FormTemplateService {
 
     this.checkIsFormOwner(formTemplate, session, true);
 
-    formTemplate.label = input.label;
-    formTemplate.template = input.template;
+    const setFields: QueryDeepPartialEntity<FormTemplate> = {
+      label: input.label,
+      template: addIdToEachField(input.template),
+      version: () => 'version + 1',
+    };
 
-    if (session.userId) {
-      await this.assignUserIfNotExist(formTemplate, session.userId);
+    if (session.userId && !!formTemplate.user) {
+      const user = await suppressNotFoundFailure(
+        this.userService.getById(session.userId),
+      );
+      setFields['user'] = user;
     }
 
-    return await this.save(formTemplate);
+    const result = await this.formTemplateRepository
+      .createQueryBuilder()
+      .update(FormTemplate)
+      .set(setFields)
+      .where('id = :id', { id: formTemplate.id })
+      .returning('*')
+      .updateEntity(true)
+      .execute();
+
+    return result.raw[0];
   }
 
   async delete(id: FormTemplate['id']): Promise<true> {
@@ -164,23 +184,23 @@ export class FormTemplateService {
     ];
   };
 
-  private async assignUserIfNotExist(
-    entity: FormTemplate,
-    userId: User['id'],
-  ): Promise<FormTemplate> {
-    if (entity.user) {
-      return entity;
-    }
+  // private async assignUserIfNotExist(
+  //   entity: FormTemplate,
+  //   userId: User['id'],
+  // ): Promise<FormTemplate> {
+  //   if (entity.user) {
+  //     return entity;
+  //   }
 
-    const user = userId
-      ? await suppressNotFoundFailure(this.userService.getById(userId))
-      : undefined;
+  //   const user = userId
+  //     ? await suppressNotFoundFailure(this.userService.getById(userId))
+  //     : undefined;
 
-    entity.user = user;
-    return entity;
-  }
+  //   entity.user = user;
+  //   return entity;
+  // }
 
-  private checkIsFormOwner(
+  checkIsFormOwner(
     formTemplate: FormTemplate,
     { formTemplatesIds, userId }: MyNotProtectedSession,
     throwErrorOnFalse = false,
@@ -197,7 +217,7 @@ export class FormTemplateService {
 
     if (!canEdit && throwErrorOnFalse) {
       throw new ForbiddenException(
-        'Unauthorize',
+        'Unauthorize. You are not sign in or form is not in your cookies settings',
         FormTemplateErrorCode.FORBIDDEN,
       );
     }

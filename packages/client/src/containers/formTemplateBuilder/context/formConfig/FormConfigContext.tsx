@@ -3,7 +3,7 @@ import { randomString } from "@lib/randomString";
 import { set } from "@lib/set";
 import {
   FormTemplateFieldsFragment,
-  parseStringifyFormTemplate,
+  parseFormTemplate,
   useCreateFormTemplateMutation,
   useSaveFormTemplateMutation,
 } from "@package/common";
@@ -132,14 +132,12 @@ export const FormConfigProvider: FC = ({ children }) => {
     });
 
     if (response.data?.getFormTemplate) {
-      setConfig(
-        parseStringifyFormTemplate(response.data.getFormTemplate.template)
-      );
+      setConfig(parseFormTemplate(response.data.getFormTemplate.template));
       setFormTemplate(response.data?.getFormTemplate);
     }
   }, [formTemplateId]);
 
-  const saveFormTemplate = async () => {
+  const saveFormTemplate = async (): Promise<void> => {
     const stringifyConfig = JSON.stringify(config);
 
     if (!formTemplateId) {

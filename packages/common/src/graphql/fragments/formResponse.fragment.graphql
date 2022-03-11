@@ -1,0 +1,7 @@
+fragment FormResponseFields on FormResponse {
+  createdAt
+  formVersion
+  id
+  response
+  updatedAt
+}

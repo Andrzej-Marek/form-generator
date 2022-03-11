@@ -14,7 +14,7 @@ import { User } from './User.entity';
 
 export type InsertFormTemplate = Omit<
   FormTemplate,
-  InsertOmitFields | 'convertToFormTemplate' | 'user' | 'published'
+  InsertOmitFields | 'convertToFormTemplate' | 'user' | 'published' | 'version'
 >;
 
 @ObjectType()
@@ -47,6 +47,10 @@ export class FormTemplate extends BaseEntity {
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.formTemplates, { nullable: true })
   user?: User;
+
+  @Field()
+  @Column({ default: 1 })
+  version!: number;
 
   @Field(() => Date)
   @CreateDateColumn({

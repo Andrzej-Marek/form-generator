@@ -9,8 +9,8 @@ import { FormWrapper } from "@layout/form";
 import { FC, Fragment, useMemo } from "react";
 import { SectionConfig } from "src/types";
 import { TypeController } from ".";
-import { CounterField } from "..";
-import Counter from "../Counter";
+import { ButtonSection } from "../components";
+import { ViewTypeController } from "./TypeController";
 
 type OwnProps = {
   config: SectionConfig;
@@ -55,7 +55,7 @@ const SectionController: FC<Props> = ({
         <SectionDropSpace onDrop={onSectionDrop} sectionIndex={sectionIndex} />
       )}
       <FormSectionCart
-        sectionIndex={sectionIndex}
+        sectionConfig={config}
         actions={{ onConfigClick: () => actions.configSection(sectionIndex) }}
       >
         <FormWrapper>
@@ -64,6 +64,7 @@ const SectionController: FC<Props> = ({
             position={{ sectionIndex, configIndex: 0 }}
           />
           {elements}
+          <ButtonSection />
         </FormWrapper>
       </FormSectionCart>
       <SectionDropSpace
@@ -71,6 +72,29 @@ const SectionController: FC<Props> = ({
         sectionIndex={sectionIndex + 1}
       />
     </>
+  );
+};
+
+export const ViewSectionController = ({
+  config,
+}: Pick<OwnProps, "sectionIndex" | "config">) => {
+  const elements = useMemo(
+    () =>
+      config.config.map((el, configIndex) => (
+        <Fragment key={configIndex}>
+          <ViewTypeController typeConfig={el} />
+        </Fragment>
+      )),
+    [config]
+  );
+
+  return (
+    <FormSectionCart sectionConfig={config}>
+      <FormWrapper>
+        {elements}
+        <ButtonSection />
+      </FormWrapper>
+    </FormSectionCart>
   );
 };
 

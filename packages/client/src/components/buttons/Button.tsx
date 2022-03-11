@@ -7,6 +7,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "normal" | "outline" | "custom" | "cancelOutline";
   size?: "big" | "medium" | "small";
   active?: boolean;
+  wide?: boolean;
   loading?: boolean;
   disabled?: boolean;
 }
@@ -39,6 +40,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       active,
       loading = false,
       disabled = false,
+      wide,
       ...rest
     } = props;
     const classesName = cn(
@@ -52,6 +54,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         [classes.small]: size === "small",
         [classes.medium]: size === "medium",
         [classes.big]: size === "big",
+        "w-full": !!wide,
       },
       className
     );

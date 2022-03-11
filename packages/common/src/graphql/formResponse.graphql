@@ -1,0 +1,11 @@
+mutation SendFormResponse($input: SendFormResponseInput!) {
+  sendFormResponse(input: $input) {
+    ...FormResponseFields
+  }
+}
+
+query CollectFormResponses($formTemplateId: String!) {
+  collectFormResponses(formTemplateId: $formTemplateId) {
+    ...FormResponseFields
+  }
+}

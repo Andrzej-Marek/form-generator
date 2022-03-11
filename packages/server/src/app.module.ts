@@ -7,6 +7,7 @@ import { UserModule } from './services/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormTemplateModule } from './services/formTemplate/formTemplate.module';
 import { AuthModule } from './services/auth/auth.module';
+import { FormResponseModule } from './services/formResponse/formResponse.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './services/auth/auth.module';
     AuthModule,
     UserModule,
     FormTemplateModule,
+    FormResponseModule,
   ],
   controllers: [],
   providers: [],

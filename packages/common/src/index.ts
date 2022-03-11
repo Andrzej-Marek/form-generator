@@ -3,4 +3,4 @@ export * from "./graphql/types";
 export * from "./helpers";
 export * from "./services";
 
-export const add = (first: number, second: number) => first + second;
+export const addTest = (a: number, b: number) => a + b;

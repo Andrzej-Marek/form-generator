@@ -3,6 +3,7 @@ fragment FormTemplateFields on FormTemplate {
   template
   label
   template
+  version
   createdAt
   updatedAt
 }

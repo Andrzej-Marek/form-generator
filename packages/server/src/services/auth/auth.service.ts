@@ -64,7 +64,7 @@ export class AuthService {
     return rest as User;
   }
 
-  async login({ userId, formTemplatesIds }: MySession): Promise<User> {
+  async login({ userId }: MySession): Promise<User> {
     const user = await this.usersService.getById(userId);
 
     // NOTE: Uncomment if we want auto assign afer login

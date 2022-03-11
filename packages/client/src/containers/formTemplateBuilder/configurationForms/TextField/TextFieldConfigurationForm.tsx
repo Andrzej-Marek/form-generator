@@ -118,9 +118,9 @@ const TextFieldConfigurationForm: FC<Props> = ({
             onChangeFieldSchema={onUpdateFieldSchema}
             onValidationCheck={onValidationCheck}
           />
-          <Button type="submit" size="small">
+          {/* <Button type="submit" size="small">
             Save
-          </Button>
+          </Button> */}
 
           {/* <Button
             variant="cancelOutline"

@@ -225,7 +225,7 @@ const DraggableBox = ({
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
       }}
-      className="py-5 pl-5 mb-2 bg-gray-50 border-2 rounded-md text-center flex items-center"
+      className="py-5 pl-5 mb-2 bg-gray-50 border-2 border-gray-100 rounded-md text-center flex items-center"
     >
       <Icon icon={icon} className="mr-4 w-5 h-5" />
       <span className="font-medium text-sm">{label}</span>
